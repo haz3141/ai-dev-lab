@@ -17,6 +17,7 @@ dependencies = [
     "litellm>=1.76.2",
     "python-dotenv>=1.1.1",
     "pytest>=8.3.4",
+    "pytest-cov>=4.0.0",
     "black>=25.1.0",
     "ruff>=0.12.12",
 ]
@@ -106,4 +107,4 @@ testpaths = ["lab/tests", "lab/security/tests", "lab/eval"]
 python_files = ["test_*.py", "*_test.py"]
 python_classes = ["Test*"]
 python_functions = ["test_*"]
-addopts = "-v --tb=short"
+addopts = "-v --tb=short --cov=lab --cov-report=xml --cov-fail-under=68"

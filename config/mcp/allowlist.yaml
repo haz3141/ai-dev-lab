@@ -1,0 +1,4 @@
+version: v0.6.2
+allow:
+  - docs.search
+  - vector.search
