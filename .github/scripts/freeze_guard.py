@@ -48,6 +48,7 @@ def main():
         "requirements.txt",
         "requirements-dev.txt",
         "eval.md",
+        "lab/*/README.md",  # Allow lab subdirectory README files
     )
 
     def changed_files():
@@ -65,7 +66,19 @@ def main():
             print(f"Error getting changed files: {e.stderr.decode()}")
             return []
 
-    bad = [p for p in changed_files() if not any(p.startswith(prefix) for prefix in allowed)]
+    def is_allowed(path):
+        """Check if a path is allowed by any of the allowed patterns."""
+        for pattern in allowed:
+            if '*' in pattern:
+                # Handle glob patterns like "lab/*/README.md"
+                import fnmatch
+                if fnmatch.fnmatch(path, pattern):
+                    return True
+            elif path.startswith(pattern):
+                return True
+        return False
+    
+    bad = [p for p in changed_files() if not is_allowed(p)]
 
     if bad:
         print("Freeze violated. Blocked paths:")
