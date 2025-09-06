@@ -12,7 +12,7 @@ AI Development Lab with MCP Server for secure, auditable AI tool interactions.
 
 2. Start the MCP server:
    ```bash
-   uvicorn mcp-server.server:app --reload
+   uvicorn mcp_server.server:app --reload
    ```
 
 3. Run tests:

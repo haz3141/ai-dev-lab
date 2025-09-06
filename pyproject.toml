@@ -100,7 +100,7 @@ skip-magic-trailing-comma = false
 line-ending = "auto"
 
 [tool.ruff.lint.isort]
-known-first-party = ["lab", "mcp-server"]
+known-first-party = ["lab", "mcp_server"]
 
 [tool.pytest.ini_options]
 testpaths = ["lab/tests", "lab/security/tests", "lab/eval"]

@@ -5,6 +5,7 @@ import logging
 from lab.dsp.summarize import Summarize
 from lab.security.guardian import guardian
 from lab.obs.audit import audit_logger
+from mcp_server.tools.search_docs import search_documents_endpoint
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -39,20 +40,21 @@ def search_docs(req: SearchRequest, request: Request):
     session_id = request.headers.get("X-Session-ID")
 
     try:
-        # Mock search results for now
-        results = []
-
+        # Use the real search tool
+        search_result = search_documents_endpoint(req.query, top_k=5)
         # Log the tool call
         request_id = audit_logger.log_tool_call(
             tool_name="tools/search_docs",
             input_data={"query": req.query},
-            output_data={"query": req.query, "results": results},
+            output_data=search_result,
             start_time=start_time,
             user_id=user_id,
             session_id=session_id,
         )
 
-        return {"query": req.query, "results": results, "request_id": request_id}
+        # Add request_id to response
+        search_result["request_id"] = request_id
+        return search_result
     except Exception as e:
         logger.error(f"Error in search_docs: {e}")
         audit_logger.log_tool_call(
