@@ -1,0 +1,27 @@
+name: CI
+on:
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - name: Install
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install -r requirements.txt
+      - name: Lint (pre-commit)
+        run: |
+          source .venv/bin/activate
+          pre-commit run --all-files || true
+      - name: Unit tests
+        run: |
+          source .venv/bin/activate
+          python - <<'PY'
+          import sys, subprocess
+          sys.exit(subprocess.call([sys.executable, "lab/tests/test_summarize.py"]))
+          PY
