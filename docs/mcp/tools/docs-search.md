@@ -1,6 +1,6 @@
-# docs.search
-
 Version: v0.6.2
+
+# docs.search
 
 ## Summary
 

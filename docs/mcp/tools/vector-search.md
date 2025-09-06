@@ -1,6 +1,6 @@
-# vector.search
-
 Version: v0.6.2
+
+# vector.search
 
 ## Summary
 

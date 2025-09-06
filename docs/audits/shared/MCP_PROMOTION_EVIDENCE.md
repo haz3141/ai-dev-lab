@@ -1,6 +1,6 @@
-# MCP Tool Promotions — Evidence
-
 Version: v0.6.2
+
+# MCP Tool Promotions — Evidence
 
 ## Tools added
 

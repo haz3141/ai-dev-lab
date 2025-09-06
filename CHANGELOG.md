@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.2] - 2025-09-06
+
+### Added
+- **Coverage Gating**: Added pytest-cov with 68% threshold enforcement in CI
+- **MCP Tool Promotions**: Added docs.search and vector.search tools to allowlist
+- **Documentation Headers**: Enforced version headers on all docs/ files
+
+### Changed
+- **Lint Expansion**: Expanded Ruff rules scope with comprehensive configuration
+- **CI Workflow**: Enhanced with coverage gating and documentation validation
+
+### Pending
+- **RAG Baseline**: Step 6 implementation (to be completed)
+
 ## [0.6.1] - 2024-12-19
 
 ### Added

@@ -1,6 +1,6 @@
-# Coverage Validation Evidence
+Version: v0.6.2
 
-**Version:** v0.6.2  
+# Coverage Validation Evidence  
 **Date:** 2025-01-06  
 **Audit Type:** PR-B Coverage Gating
 
