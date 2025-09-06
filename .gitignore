@@ -1,0 +1,12 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+# Node
+node_modules/
+# Cursor
+.cursorignore
+# OS
+.DS_Store
+Thumbs.db
