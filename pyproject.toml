@@ -17,6 +17,7 @@ dependencies = [
     "litellm>=1.76.2",
     "python-dotenv>=1.1.1",
     "pytest>=8.3.4",
+    "pytest-cov>=4.0.0",
     "black>=25.1.0",
     "ruff>=0.12.12",
 ]
