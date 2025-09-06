@@ -9,6 +9,8 @@ All audit PRs merged and validated. Freeze lifted for v0.6.2 scope (lint expansi
 - ✅ Freeze guard strengthened to catch untracked files
 - ✅ All tests passing (17/17)
 - ✅ Freeze guard respects all allowed paths
+- ✅ Version headers normalized across all audit docs (PR #19)
+- ✅ MCP validation evidence captured with health/deny proof (PR #20)
 
 ## Next Phase: v0.6.2
 - Lint expansion and coverage gating
