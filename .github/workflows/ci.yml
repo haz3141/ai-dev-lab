@@ -22,9 +22,11 @@ jobs:
         run: |
           source .venv/bin/activate
           python - <<'PY'
-          import sys, subprocess
+          import os, sys, subprocess
+          os.environ["EMBED_BACKEND"] = "stub"
           rc = 0
           rc |= subprocess.call([sys.executable, "lab/tests/test_summarize.py"])
           rc |= subprocess.call([sys.executable, "lab/rag/tests/test_chunk_and_retrieve.py"])
+          rc |= subprocess.call([sys.executable, "lab/rag/tests/test_hybrid.py"])
           sys.exit(rc)
           PY
