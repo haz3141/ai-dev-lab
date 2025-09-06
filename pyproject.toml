@@ -44,11 +44,51 @@ line-length = 100
 target-version = "py311"
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "N", "W", "B", "C4", "UP"]
+select = [
+    "E", "F", "I", "N", "W", "B", "C4", "UP",  # existing
+    "A", "COM", "DTZ", "EM", "G", "PIE", "T20", "TCH", "TID",  # additional rules
+    "ARG", "ASYNC", "B904", "B905", "B906", "B907", "B908", "B909",  # security & best practices
+    "C90", "D", "DJ", "E701", "E702", "E703", "E704",  # complexity & style
+    "FBT", "ICN", "ISC", "Q", "RUF", "S", "SIM",  # more rules
+    "W191", "W291", "W292", "W293", "W504", "W505", "W601",  # whitespace & warnings
+]
 ignore = [
     "E501",  # line too long, handled by black
     "B008",  # do not perform function calls in argument defaults
     "C901",  # too complex
+    "D100",  # missing docstring in public module
+    "D101",  # missing docstring in public class
+    "D102",  # missing docstring in public method
+    "D103",  # missing docstring in public function
+    "D104",  # missing docstring in public package
+    "D105",  # missing docstring in magic method
+    "D107",  # missing docstring in __init__
+    "D203",  # 1 blank line required before class docstring
+    "D213",  # multi-line docstring summary should start at the second line
+    "D300",  # use triple double quotes for docstrings
+    "D301",  # use r""" if any backslashes in a docstring
+    "D400",  # first line should end with a period
+    "D401",  # first line should be in imperative mood
+    "D403",  # first word of the first line should be capitalized
+    "D404",  # first word of the docstring should not be `This`
+    "D405",  # section name should be properly capitalized
+    "D406",  # section name should end with a newline
+    "D407",  # missing dashed underline after section
+    "D408",  # section underline should be in the line following the section's name
+    "D409",  # section underline should match the length of its name
+    "D410",  # missing blank line after section
+    "D411",  # missing blank line before section
+    "D412",  # no blank lines allowed between a section header and its content
+    "D413",  # missing blank line after last section
+    "D414",  # section has no content
+    "D415",  # first line should end with a period, question mark, or exclamation point
+    "D416",  # section name should end with a colon
+    "D417",  # missing argument descriptions in the docstring
+    "D418",  # missing docstring in public method
+    "D419",  # missing docstring in public function
+    "S101",  # use of assert detected
+    "S311",  # standard pseudo-random generators are not suitable for cryptographic purposes
+    "S324",  # use of insecure MD2, MD4, MD5, or SHA1 hash function
 ]
 
 [tool.ruff.format]
