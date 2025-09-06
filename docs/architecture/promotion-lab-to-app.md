@@ -1,4 +1,4 @@
-<!-- Version: 0.6.0 -->
+Version: v0.6.1
 # Lab to App Promotion Workflow
 
 This document outlines the process for promoting code from the `lab/` directory to the `app/` directory, maintaining separation between experimental and production code.
