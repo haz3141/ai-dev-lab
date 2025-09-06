@@ -4,6 +4,7 @@ Tests for Guardian security module.
 
 import os
 from unittest.mock import patch
+
 from lab.security.guardian import Guardian
 
 

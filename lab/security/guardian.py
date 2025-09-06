@@ -4,11 +4,11 @@ Security Guardian for MCP Server
 Provides allowlist-based tool access control and PII redaction capabilities.
 """
 
+import logging
 import os
 import re
-from typing import List, Any
 from functools import wraps
-import logging
+from typing import Any, List
 
 logger = logging.getLogger(__name__)
 
@@ -18,9 +18,7 @@ class Guardian:
 
     def __init__(self):
         self.allowlist = self._load_allowlist()
-        self.redact_outputs = (
-            os.getenv("GUARDIAN_REDACT_OUTPUTS", "true").lower() == "true"
-        )
+        self.redact_outputs = os.getenv("GUARDIAN_REDACT_OUTPUTS", "true").lower() == "true"
 
     def _load_allowlist(self) -> List[str]:
         """Load allowed tools from environment variable."""

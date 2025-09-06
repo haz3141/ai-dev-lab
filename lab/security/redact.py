@@ -5,8 +5,8 @@ Provides comprehensive PII detection and redaction capabilities.
 """
 
 import re
-from typing import List, Dict, Tuple
 from dataclasses import dataclass
+from typing import Dict, List, Tuple
 
 
 @dataclass
