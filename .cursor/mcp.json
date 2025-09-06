@@ -1,10 +1,18 @@
-{
-  "servers": [
-    {
-      "id": "lab-mcp",
-      "transport": "stdio",
-      "command": "python",
-      "args": ["-m", "mcp_server_entry"]
-    }
-  ]
-}
+[
+  {
+    "name": "lab-server",
+    "url": "http://127.0.0.1:8000",
+    "allowTools": [
+      "search_docs",
+      "summarize",
+      "rag_query",
+      "run_tests",
+      "eval_metrics",
+      "audit_recent",
+      "audit_by_request",
+      "audit_by_tool"
+    ],
+    "timeout": 30,
+    "retries": 3
+  }
+]

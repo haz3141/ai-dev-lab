@@ -1,6 +1,21 @@
 {
   "commands": {
-    "dev": "uvicorn mcp-server.server:app --reload --port 8080",
-    "test": "pytest -q || true"
+    "dev:mcp": "uvicorn mcp-server.server:app --reload --host 127.0.0.1 --port 8000",
+    "test": "pytest -q",
+    "test:security": "pytest lab/security/tests/ -v",
+    "test:integration": "pytest lab/tests/ -v",
+    "eval": "python lab/eval/run_eval.py --dataset lab/eval/dataset.jsonl --k 5",
+    "eval:full": "python lab/eval/run_eval.py --dataset lab/eval/dataset.jsonl --k 5 --output eval_results.json",
+    "obs:ingest": "python lab/obs/ingest.py --path logs/audit/*.jsonl",
+    "obs:audit": "python lab/obs/audit.py --recent 100",
+    "lint": "ruff check .",
+    "format": "ruff format . && black .",
+    "format:check": "ruff format --check . && black --check .",
+    "docs:check": "find docs/ -name '*.md' -exec grep -L '<!-- Version:' {} \\;",
+    "health": "curl -s http://127.0.0.1:8000/health | jq ."
+  },
+  "environment": {
+    "PYTHONPATH": ".",
+    "LOG_LEVEL": "INFO"
   }
 }
