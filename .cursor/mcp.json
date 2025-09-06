@@ -1,0 +1,10 @@
+{
+  "servers": [
+    {
+      "id": "lab-mcp",
+      "transport": "stdio",
+      "command": "python",
+      "args": ["-m", "mcp_server_entry"]
+    }
+  ]
+}

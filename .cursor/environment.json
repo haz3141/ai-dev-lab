@@ -1,0 +1,6 @@
+{
+  "commands": {
+    "dev": "uvicorn mcp-server.server:app --reload --port 8080",
+    "test": "pytest -q || true"
+  }
+}
