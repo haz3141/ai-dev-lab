@@ -1,0 +1,5 @@
+{"q":"What file exposes hybrid retrieval?","gold_chunk_id":"hybrid.py:class HybridRetriever"}
+{"q":"Which endpoint provides hybrid search?","gold_chunk_id":"endpoint:/tools/retrieve_hybrid"}
+{"q":"How does BM25 retrieval work?","gold_chunk_id":"retrieve.py:class BM25Retriever"}
+{"q":"What is the chunking strategy?","gold_chunk_id":"chunk.py:def chunk_records"}
+{"q":"How are embeddings generated?","gold_chunk_id":"embed.py:class EmbeddingBackend"}
