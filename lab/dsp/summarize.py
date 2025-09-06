@@ -1,6 +1,5 @@
 # lab/dsp/summarize.py
 import dspy
-import os
 
 class SummarizeSignature(dspy.Signature):
     """Summarize a short passage into 1–2 sentences."""
@@ -24,6 +23,6 @@ class Summarize(dspy.Module):
         try:
             res = self.generate(passage=passage)
             return res.summary
-        except Exception as e:
+        except Exception:
             # Return a simple fallback for now
             return f"Summary: {passage[:50]}..." if len(passage) > 50 else f"Summary: {passage}"

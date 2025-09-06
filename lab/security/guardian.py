@@ -6,7 +6,7 @@ Provides allowlist-based tool access control and PII redaction capabilities.
 
 import os
 import re
-from typing import List, Dict, Any, Optional
+from typing import List, Any
 from functools import wraps
 import logging
 

@@ -2,7 +2,6 @@
 Tests for PII redaction utilities.
 """
 
-import pytest
 from lab.security.redact import PIIRedactor, PIIMatch
 
 class TestPIIRedactor:
