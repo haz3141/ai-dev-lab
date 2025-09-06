@@ -1,0 +1,41 @@
+# Project Guardrails for AI Dev Lab
+
+## Always
+- Use only tools in `.cursor/mcp.json` allowlist
+- Prefer small, reviewable diffs. After code edits: run `test`
+- For evaluation: run `eval` and attach markdown summary
+- Keep docs current: update README/CHANGELOG when changing APIs
+- Follow the single formatter policy: Black is canonical, Ruff defers to Black
+- Use conventional commits format for all changes
+- Add version headers to documentation files: `<!-- Version: 0.6.0 -->`
+
+## Never
+- Add or reveal secrets; do not touch `.env*` files
+- Edit outside allowed paths during `code-freeze` (only config/docs/CI)
+- Disable redaction or Guardian security policies
+- Bypass the audit logging system
+- Make breaking changes without proper deprecation notices
+- Commit directly to main branch (use feature branches)
+
+## Code Freeze Rules (ops/cursor-setup-and-audit-* branches)
+- **ONLY** edit: `.cursor/**`, `.github/**`, `docs/**`, `pyproject.toml`, `requirements*.txt`, `README.md`, `CHANGELOG.md`
+- **FORBIDDEN** during freeze: `app/`, `lab/` (except `.md`, `.json`, `.yml`, `.yaml`, `.toml`, `.txt`, `.sh` files)
+- All changes must be config, documentation, or CI-related
+
+## Security Requirements
+- All tool calls must go through Guardian security policy
+- All operations must be logged via audit system
+- PII must be redacted in outputs
+- No hardcoded secrets or credentials
+
+## Testing Requirements
+- Run `test` after any code changes
+- Run `test:security` for security-related changes
+- Run `eval` for AI/ML model changes
+- All tests must pass before submitting PR
+
+## Documentation Requirements
+- Update relevant docs for any API changes
+- Add version headers to new documentation
+- Include examples for new features
+- Keep architecture docs current
