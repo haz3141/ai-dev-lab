@@ -24,7 +24,7 @@ def main():
 
     if event_path and os.path.exists(event_path):
         try:
-            with open(event_path, "r", encoding="utf-8") as f:
+            with open(event_path, encoding="utf-8") as f:
                 ev = json.load(f)
             pr = ev.get("pull_request") or {}
             base = pr.get("base", {}).get("sha") or base
@@ -37,7 +37,7 @@ def main():
         base = sha_or_default("GITHUB_BASE_REF", base)
         head = sha_or_default("GITHUB_SHA", head)
 
-    ALLOWED = (
+    allowed = (
         ".cursor/",
         ".github/",
         "docs/",
@@ -64,7 +64,7 @@ def main():
             print(f"Error getting changed files: {e.stderr.decode()}")
             return []
 
-    bad = [p for p in changed_files() if not any(p.startswith(allowed) for allowed in ALLOWED)]
+    bad = [p for p in changed_files() if not any(p.startswith(prefix) for prefix in allowed)]
 
     if bad:
         print("Freeze violated. Blocked paths:")
