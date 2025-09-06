@@ -1,0 +1,3 @@
+DSPy helps structure LLM programs and optimize them for specific tasks.
+A Retrieval-Augmented Generation (RAG) system retrieves relevant chunks before generation.
+This project demonstrates a minimal BM25 retriever over chunked text files.
