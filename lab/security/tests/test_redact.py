@@ -61,9 +61,9 @@ class TestPIIRedactor:
         for text in test_cases:
             matches = redactor.find_pii(text)
             assert len(matches) >= 1, f"No phone matches found in: {text}"
-            assert any(
-                match.pii_type == "phone" for match in matches
-            ), f"No phone type found in matches for: {text}"
+            assert any(match.pii_type == "phone" for match in matches), (
+                f"No phone type found in matches for: {text}"
+            )
 
     def test_redact_text(self):
         """Test text redaction."""
