@@ -47,6 +47,7 @@ def main():
         "requirements",
         "requirements.txt",
         "requirements-dev.txt",
+        "eval.md",
     )
 
     def changed_files():
