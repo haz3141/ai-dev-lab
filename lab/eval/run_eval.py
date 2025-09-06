@@ -6,7 +6,8 @@ Runs evaluation on retrieval systems with deterministic test harness.
 
 import json
 import os
-from typing import List, Dict, Any
+from typing import Any, Dict, List
+
 from lab.eval.metrics import DeterministicTestHarness, RetrievalEvaluator
 
 

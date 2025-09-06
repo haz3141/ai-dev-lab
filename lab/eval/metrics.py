@@ -4,9 +4,10 @@ Evaluation Metrics for Retrieval Systems
 Provides hit@k, MRR@k, and other retrieval evaluation metrics.
 """
 
-import numpy as np
-from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
+from typing import Any, Dict, List, Optional
+
+import numpy as np
 
 
 @dataclass
@@ -106,11 +107,7 @@ class RetrievalEvaluator:
         for result in self.results:
             top_k = result.retrieved_docs[:k]
             relevant_retrieved = sum(1 for doc in top_k if doc in result.relevant_docs)
-            recall = (
-                relevant_retrieved / len(result.relevant_docs)
-                if result.relevant_docs
-                else 0.0
-            )
+            recall = relevant_retrieved / len(result.relevant_docs) if result.relevant_docs else 0.0
             recalls.append(recall)
 
         return np.mean(recalls)
@@ -188,9 +185,7 @@ class DeterministicTestHarness:
 
         return dot_product / (norm_a * norm_b)
 
-    def retrieve_documents(
-        self, query: str, documents: List[str], k: int = 5
-    ) -> List[str]:
+    def retrieve_documents(self, query: str, documents: List[str], k: int = 5) -> List[str]:
         """Retrieve top-k documents using stub embeddings."""
         query_embedding = self.create_stub_embedding(query)
 
