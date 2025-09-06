@@ -137,7 +137,7 @@ jobs:
         CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep '\.py$' || true)
         if [ -n "$CHANGED_FILES" ]; then
           echo "Checking changed Python files: $CHANGED_FILES"
-          echo "$CHANGED_FILES" | xargs ruff check
+          echo "$CHANGED_FILES" | xargs ruff check --output-format=github
         else
           echo "No Python files changed, skipping ruff check"
         fi
@@ -171,12 +171,12 @@ jobs:
     
     - name: Check documentation version headers
       run: |
-        # Check for version headers in docs
-        MISSING_HEADERS=$(find docs/ -name "*.md" -exec grep -L "<!-- Version:" {} \; || true)
+        # Check for version headers in docs (new format)
+        MISSING_HEADERS=$(find docs/ -name "*.md" -exec sh -c 'head -n1 "$1" | grep -q "^Version:" || echo "$1"' _ {} \; || true)
         if [ -n "$MISSING_HEADERS" ]; then
           echo "❌ Documentation files missing version headers:"
           echo "$MISSING_HEADERS"
-          echo "Please add version headers like: <!-- Version: 0.6.0 -->"
+          echo "Please add version headers like: Version: v0.6.1"
           exit 1
         else
           echo "✅ All documentation files have version headers"
