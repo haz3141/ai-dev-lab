@@ -1,6 +1,6 @@
-Version: v0.6.1
-
 # MCP Validation Evidence
+
+Version: v0.6.2
 
 ## Health Check
 

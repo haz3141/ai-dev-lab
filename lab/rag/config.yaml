@@ -1,0 +1,27 @@
+# RAG Configuration - Step 6A
+
+# Document processing
+chunking:
+  chunk_size: 1000  # tokens
+  overlap_ratio: 0.15  # 15% overlap between chunks
+
+# Embedding model
+embeddings:
+  model_name: "sentence-transformers/all-MiniLM-L6-v2"
+  dimension: 384
+  batch_size: 32
+
+# Storage
+storage:
+  embeddings_path: "data/embeddings"
+  documents_path: "data/documents"
+
+# Retrieval
+retrieval:
+  top_k: 5  # Number of top results to return
+  similarity_threshold: 0.7
+
+# Testing
+testing:
+  deterministic_seed: 42
+  mock_embeddings: true  # Use mock embeddings for testing

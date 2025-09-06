@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 - **Coverage Gating**: Added pytest-cov with 68% threshold enforcement in CI
 - **MCP Tool Promotions**: Added docs.search and vector.search tools to allowlist
 - **Documentation Headers**: Enforced version headers on all docs/ files
+- **App MCP Server**: Created production runtime server in `app/mcp-servers/promotions/`
 
 ### Changed
 - **Lint Expansion**: Expanded Ruff rules scope with comprehensive configuration
