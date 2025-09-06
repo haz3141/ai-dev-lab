@@ -1,3 +1,5 @@
+Version: v0.6.2
+
 # Use Case: AI-Assisted Development
 
 ## Problem

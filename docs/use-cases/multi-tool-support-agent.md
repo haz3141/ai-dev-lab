@@ -1,3 +1,5 @@
+Version: v0.6.2
+
 # Use Case: Multi-Tool Support Agent
 
 ## Problem

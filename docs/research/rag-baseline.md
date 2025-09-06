@@ -1,3 +1,5 @@
+Version: v0.6.2
+
 # RAG Baseline — Research Findings (v0.6.2)
 
 **Scope:** Track chunking, retrieval, and QA metrics for the baseline system.
