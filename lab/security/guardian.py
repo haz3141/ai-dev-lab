@@ -46,7 +46,10 @@ class Guardian:
                 
                 try:
                     result = func(*args, **kwargs)
-                    return self._redact_output(result) if self.redact_outputs else result
+                    if self.redact_outputs:
+                        return self._redact_output(result)
+                    else:
+                        return result
                 except Exception as e:
                     logger.error(f"Error in guarded tool {tool_name}: {e}")
                     return {"error": "Internal error", "message": "An error occurred processing the request"}
@@ -56,6 +59,9 @@ class Guardian:
     
     def _redact_output(self, data: Any) -> Any:
         """Recursively redact PII from output data."""
+        if not self.redact_outputs:
+            return data
+            
         if isinstance(data, dict):
             return {k: self._redact_output(v) for k, v in data.items()}
         elif isinstance(data, list):

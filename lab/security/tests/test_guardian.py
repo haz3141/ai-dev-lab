@@ -88,6 +88,7 @@ class TestGuardian:
             }
             
             result = guardian._redact_output(test_data)
+            # When redaction is disabled, data should pass through unchanged
             assert result["email"] == "test@example.com"
             assert result["ssn"] == "123-45-6789"
     

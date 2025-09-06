@@ -56,15 +56,16 @@ class TestPIIRedactor:
         
         test_cases = [
             "Call 555-123-4567",
-            "Call (555) 123-4567",
+            "Call (555) 123-4567", 
             "Call 555.123.4567",
-            "Call 5551234567"
+            "Call 5551234567",
+            "Call 555 123 4567"
         ]
         
         for text in test_cases:
             matches = redactor.find_pii(text)
-            assert len(matches) >= 1
-            assert any(match.pii_type == 'phone' for match in matches)
+            assert len(matches) >= 1, f"No phone matches found in: {text}"
+            assert any(match.pii_type == 'phone' for match in matches), f"No phone type found in matches for: {text}"
     
     def test_redact_text(self):
         """Test text redaction."""
@@ -75,7 +76,7 @@ class TestPIIRedactor:
         
         assert "[REDACTED-EMAIL]" in redacted
         assert "[REDACTED-SSN]" in redacted
-        assert "[REDACTED-CC]" in redacted
+        assert "[REDACTED-CREDIT_CARD]" in redacted
         assert "john@example.com" not in redacted
         assert "123-45-6789" not in redacted
         assert "1234-5678-9012-3456" not in redacted

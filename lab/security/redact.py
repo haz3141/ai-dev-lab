@@ -37,9 +37,10 @@ class PIIRedactor:
             ],
             'phone': [
                 r'\b\d{3}-\d{3}-\d{4}\b',  # XXX-XXX-XXXX
-                r'\b\(\d{3}\)\s\d{3}-\d{4}\b',  # (XXX) XXX-XXXX
+                r'\(\d{3}\)\s\d{3}-\d{4}',  # (XXX) XXX-XXXX
                 r'\b\d{3}\.\d{3}\.\d{4}\b',  # XXX.XXX.XXXX
-                r'\b\d{10}\b'  # XXXXXXXXXX
+                r'\b\d{10}\b',  # XXXXXXXXXX
+                r'\b\d{3}\s\d{3}\s\d{4}\b'  # XXX XXX XXXX
             ],
             'ip_address': [
                 r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'  # IPv4

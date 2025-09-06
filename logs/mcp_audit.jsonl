@@ -1,0 +1,1 @@
+{"timestamp": "2025-09-06T20:59:12.460460Z", "request_id": "0e2a62a5-41a7-48ce-aeed-92aa4e604286", "event_type": "tool_call", "tool_name": "test_tool", "input_data": {"input": "test"}, "output_data": {"output": "test"}, "user_id": "test_user", "session_id": null, "duration_ms": null, "error": null}
