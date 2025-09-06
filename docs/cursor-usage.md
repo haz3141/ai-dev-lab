@@ -22,7 +22,7 @@ Start the MCP server to enable tool access:
 ```bash
 # Using Cursor command palette: Cmd+Shift+P -> "dev:mcp"
 # Or manually:
-uvicorn mcp-server.server:app --reload --host 127.0.0.1 --port 8000
+uvicorn mcp_server.server:app --reload --host 127.0.0.1 --port 8000
 ```
 
 ## Available Commands
@@ -196,7 +196,7 @@ Add custom commands to `.cursor/environment.json`:
 Use Cursor to generate docs from code:
 
 ```
-@docs Generate API documentation for all endpoints in mcp-server/server.py
+@docs Generate API documentation for all endpoints in mcp_server/server.py
 ```
 
 ## Resources
