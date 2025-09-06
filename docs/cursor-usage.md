@@ -1,4 +1,4 @@
-<!-- Version: 0.6.0 -->
+Version: v0.6.1
 # Cursor IDE Usage Guide
 
 This guide explains how to use Cursor IDE effectively with the AI Dev Lab project.

@@ -1,4 +1,4 @@
-<!-- Version: 0.6.0 -->
+Version: v0.6.1
 # Folder-by-Folder Audit Plan
 
 This document outlines the systematic audit process for the AI Dev Lab project during the code freeze phase.

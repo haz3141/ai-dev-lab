@@ -1,4 +1,4 @@
-<!-- Version: 0.6.0 -->
+Version: v0.6.1
 # Security & Compliance Checklist
 
 This checklist ensures all code meets security and compliance requirements before deployment.
