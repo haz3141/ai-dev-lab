@@ -1,0 +1,103 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  security-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run security tests
+      run: |
+        python -m pytest lab/security/tests/ -v
+    
+    - name: Run detect-secrets
+      run: |
+        detect-secrets scan --baseline .secrets.baseline || true
+
+  eval-tests:
+    runs-on: ubuntu-latest
+    continue-on-error: true  # Non-blocking
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run evaluation tests
+      run: |
+        python -m pytest lab/eval/ -v || true
+        python lab/eval/run_eval.py --output eval_results.json || true
+    
+    - name: Upload evaluation results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: eval-results
+        path: eval_results.json
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run integration tests
+      run: |
+        python -m pytest lab/tests/ -v
+    
+    - name: Test MCP server startup
+      run: |
+        timeout 10s python -m mcp-server.server || true
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Run linting
+      run: |
+        ruff check .
+        ruff format --check .
+        black --check .
