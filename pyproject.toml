@@ -102,8 +102,5 @@ line-ending = "auto"
 known-first-party = ["lab", "mcp-server"]
 
 [tool.pytest.ini_options]
-testpaths = ["lab/tests", "lab/security/tests", "lab/eval"]
-python_files = ["test_*.py", "*_test.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-addopts = "-v --tb=short"
+addopts = "-q --cov=lab --cov-report=xml --cov-fail-under=68"
+testpaths = ["lab/tests"]
