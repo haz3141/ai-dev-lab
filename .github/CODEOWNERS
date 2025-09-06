@@ -1,0 +1,7 @@
+# Code owners (order matters; first match wins)
+# Top-level: you own everything by default
+* @haz3141
+
+# Optional: set future patterns as you add teams/files
+# /app/ @haz3141
+# /lab/ @haz3141
