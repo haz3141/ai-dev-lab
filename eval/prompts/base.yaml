@@ -1,0 +1,67 @@
+version: "1.0.0"
+created_at: "2025-09-06T00:00:00Z"
+description: "Base prompts for RAG evaluation with versioning"
+
+# Question Answering Prompts
+qa:
+  system: |
+    You are a helpful assistant that answers questions based on provided passages.
+    Always ground your answers in the given passages and cite relevant sources.
+    
+  user: |
+    Question: {question}
+    
+    Passages:
+    {passages}
+    
+    Please provide a clear, accurate answer based on the passages above.
+    If you cannot find the answer in the passages, say so explicitly.
+
+# Document Retrieval Prompts  
+retrieval:
+  query_expansion: |
+    Expand the following query to improve document retrieval:
+    Original: {query}
+    Expanded: 
+    
+  relevance_scoring: |
+    Rate the relevance of this passage to the query (0-10):
+    Query: {query}
+    Passage: {passage}
+    Score: 
+
+# Evaluation Prompts
+evaluation:
+  answer_quality: |
+    Evaluate the quality of this answer on a scale of 1-5:
+    Question: {question}
+    Answer: {answer}
+    Ground Truth: {ground_truth}
+    Score: 
+    
+  grounding_check: |
+    Check if this answer is properly grounded in the provided passages:
+    Answer: {answer}
+    Passages: {passages}
+    Grounded: [Yes/No]
+    Reasoning: 
+
+# Threshold Policies
+thresholds:
+  accuracy:
+    min_score: 0.8
+    fail_threshold: 0.05  # Fail if drop >5%
+    
+  grounding:
+    min_rate: 0.9
+    fail_threshold: 0.10  # Fail if drop >10%
+    
+  latency:
+    max_p95_ms: 2000
+    fail_threshold: 0.20  # Fail if increase >20%
+
+# Model Configuration
+model:
+  temperature: 0.1
+  max_tokens: 512
+  top_p: 0.9

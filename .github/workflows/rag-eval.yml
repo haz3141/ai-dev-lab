@@ -1,0 +1,126 @@
+name: RAG Evaluation
+
+on:
+  push:
+    paths:
+      - 'rag/**'
+      - 'prompts/**'
+      - 'eval/**'
+  pull_request:
+    paths:
+      - 'rag/**'
+      - 'prompts/**'
+      - 'eval/**'
+
+jobs:
+  rag-evaluation:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pyyaml numpy
+      
+      - name: Create test dataset
+        run: |
+          mkdir -p eval/datasets
+          cat > eval/datasets/test.json << 'EOF'
+          [
+            {
+              "question": "What is the main purpose of this project?",
+              "passages": [
+                "This project is designed to provide a comprehensive RAG evaluation framework.",
+                "The main goal is to test retrieval and generation capabilities."
+              ],
+              "ground_truth": "The main purpose is to provide a comprehensive RAG evaluation framework."
+            },
+            {
+              "question": "How does the evaluation work?",
+              "passages": [
+                "The evaluation uses deterministic seeds for reproducibility.",
+                "It measures accuracy, grounding rate, and confidence scores."
+              ],
+              "ground_truth": "The evaluation uses deterministic seeds and measures accuracy, grounding rate, and confidence."
+            }
+          ]
+          EOF
+      
+      - name: Run RAG evaluation
+        run: |
+          python eval/pipeline/run_eval.py \
+            --dataset eval/datasets/test.json \
+            --output evidence/eval/results.json \
+            --prompts eval/prompts/base.yaml
+      
+      - name: Check evaluation thresholds
+        run: |
+          python -c "
+          import json
+          with open('evidence/eval/results.json', 'r') as f:
+              data = json.load(f)
+          
+          metrics = data['metrics']
+          print(f'Accuracy: {metrics[\"accuracy\"]:.2%}')
+          print(f'Grounding Rate: {metrics[\"grounding_rate\"]:.2%}')
+          print(f'Average Confidence: {metrics[\"avg_confidence\"]:.2f}')
+          
+          # Check thresholds
+          accuracy_ok = metrics['accuracy'] >= 0.8
+          grounding_ok = metrics['grounding_rate'] >= 0.9
+          
+          if not accuracy_ok:
+              print('❌ Accuracy below threshold (0.8)')
+              exit(1)
+          if not grounding_ok:
+              print('❌ Grounding rate below threshold (0.9)')
+              exit(1)
+              
+          print('✅ All thresholds passed')
+          "
+      
+      - name: Upload evaluation results
+        uses: actions/upload-artifact@v3
+        with:
+          name: rag-eval-results
+          path: evidence/eval/results.json
+      
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const results = JSON.parse(fs.readFileSync('evidence/eval/results.json', 'utf8'));
+            const metrics = results.metrics;
+            
+            const comment = `## RAG Evaluation Results
+            
+            **Accuracy:** ${(metrics.accuracy * 100).toFixed(1)}%
+            **Grounding Rate:** ${(metrics.grounding_rate * 100).toFixed(1)}%
+            **Average Confidence:** ${metrics.avg_confidence.toFixed(2)}
+            
+            **Status:** ${metrics.accuracy >= 0.8 && metrics.grounding_rate >= 0.9 ? '✅ Passed' : '❌ Failed'}
+            
+            <details>
+            <summary>Full Results</summary>
+            
+            \`\`\`json
+            ${JSON.stringify(results, null, 2)}
+            \`\`\`
+            </details>`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
