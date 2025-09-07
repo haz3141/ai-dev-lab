@@ -1,11 +1,9 @@
-"""
-PII Redaction Utilities
+"""PII Redaction Utilities
 
 Provides comprehensive PII detection and redaction capabilities.
 """
 
 import re
-from typing import List, Dict, Tuple
 from dataclasses import dataclass
 
 
@@ -46,7 +44,7 @@ class PIIRedactor:
             "ip_address": [r"\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b"],  # IPv4
         }
 
-    def find_pii(self, text: str) -> List[PIIMatch]:
+    def find_pii(self, text: str) -> list[PIIMatch]:
         """Find all PII matches in text."""
         matches = []
 
@@ -60,14 +58,14 @@ class PIIRedactor:
                             end=match.end(),
                             original=match.group(),
                             redacted=f"[REDACTED-{pii_type.upper()}]",
-                        )
+                        ),
                     )
 
         # Sort by position for proper redaction
         matches.sort(key=lambda x: x.start)
         return matches
 
-    def redact_text(self, text: str) -> Tuple[str, List[PIIMatch]]:
+    def redact_text(self, text: str) -> tuple[str, list[PIIMatch]]:
         """Redact PII from text and return redacted text with match info."""
         matches = self.find_pii(text)
 
@@ -81,7 +79,7 @@ class PIIRedactor:
 
         return redacted, matches
 
-    def get_redaction_summary(self, matches: List[PIIMatch]) -> Dict[str, int]:
+    def get_redaction_summary(self, matches: list[PIIMatch]) -> dict[str, int]:
         """Get summary of redacted PII types."""
         summary = {}
         for match in matches:

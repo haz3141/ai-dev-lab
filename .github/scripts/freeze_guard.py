@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""
-Freeze guard script to prevent code changes during freeze periods.
+"""Freeze guard script to prevent code changes during freeze periods.
 Handles fork PRs by reading from GitHub event payload when available.
 """
 
@@ -56,7 +55,8 @@ def main():
         try:
             out = (
                 subprocess.check_output(
-                    ["git", "diff", "--name-only", f"{base}...{head}"], stderr=subprocess.PIPE
+                    ["git", "diff", "--name-only", f"{base}...{head}"],
+                    stderr=subprocess.PIPE,
                 )
                 .decode()
                 .splitlines()
@@ -69,15 +69,16 @@ def main():
     def is_allowed(path):
         """Check if a path is allowed by any of the allowed patterns."""
         for pattern in allowed:
-            if '*' in pattern:
+            if "*" in pattern:
                 # Handle glob patterns like "lab/*/README.md"
                 import fnmatch
+
                 if fnmatch.fnmatch(path, pattern):
                     return True
             elif path.startswith(pattern):
                 return True
         return False
-    
+
     bad = [p for p in changed_files() if not is_allowed(p)]
 
     if bad:

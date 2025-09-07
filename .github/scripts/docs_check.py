@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Check that all markdown files in docs/ have version headers.
-"""
+"""Check that all markdown files in docs/ have version headers."""
 
 import os
 import sys

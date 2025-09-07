@@ -5,10 +5,11 @@ Minimal runtime server for promoted MCP tools.
 This is a production-ready wrapper around lab functionality.
 """
 
+import logging
+import time
+
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
-import time
-import logging
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -45,19 +46,18 @@ def search_docs(req: SearchRequest, request: Request):
                 "title": "Sample Document",
                 "content": f"Search results for: {req.query}",
                 "score": 0.95,
-                "source": "promoted-docs"
+                "source": "promoted-docs",
             }
         ]
 
         # Log the tool call
-        logger.info("search_docs called by user %s, session %s",
-                    user_id, session_id)
+        logger.info("search_docs called by user %s, session %s", user_id, session_id)
 
         return {
             "query": req.query,
             "results": results,
             "request_id": f"req_{int(start_time)}",
-            "service": "mcp-promotions"
+            "service": "mcp-promotions",
         }
     except Exception as e:
         logger.error("Error in search_docs: %s", e)
@@ -76,13 +76,12 @@ def summarize(req: SummarizeRequest, request: Request):
         summary = f"Summary of: {req.passage[:50]}..."
 
         # Log the tool call
-        logger.info("summarize called by user %s, session %s",
-                    user_id, session_id)
+        logger.info("summarize called by user %s, session %s", user_id, session_id)
 
         return {
             "summary": summary,
             "request_id": f"req_{int(start_time)}",
-            "service": "mcp-promotions"
+            "service": "mcp-promotions",
         }
     except Exception as e:
         logger.error("Error in summarize: %s", e)
@@ -99,6 +98,6 @@ def get_promotion_status():
         "lab_dependencies": [
             "lab.dsp.summarize",
             "lab.security.guardian",
-            "lab.obs.audit"
-        ]
+            "lab.obs.audit",
+        ],
     }

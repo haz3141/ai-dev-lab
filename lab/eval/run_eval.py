@@ -1,16 +1,16 @@
-"""
-Evaluation Runner
+"""Evaluation Runner
 
 Runs evaluation on retrieval systems with deterministic test harness.
 """
 
 import json
 import os
-from typing import List, Dict, Any
+from typing import Any
+
 from lab.eval.metrics import DeterministicTestHarness, RetrievalEvaluator
 
 
-def load_test_dataset(dataset_path: str) -> List[Dict[str, Any]]:
+def load_test_dataset(dataset_path: str) -> list[dict[str, Any]]:
     """Load test dataset from JSONL file."""
     test_cases = []
 
@@ -18,7 +18,7 @@ def load_test_dataset(dataset_path: str) -> List[Dict[str, Any]]:
         # Create a sample dataset if it doesn't exist
         return create_sample_dataset()
 
-    with open(dataset_path, "r") as f:
+    with open(dataset_path) as f:
         for line in f:
             if line.strip():
                 test_cases.append(json.loads(line))
@@ -26,7 +26,7 @@ def load_test_dataset(dataset_path: str) -> List[Dict[str, Any]]:
     return test_cases
 
 
-def create_sample_dataset() -> List[Dict[str, Any]]:
+def create_sample_dataset() -> list[dict[str, Any]]:
     """Create a sample test dataset for evaluation."""
     return [
         {
@@ -74,7 +74,7 @@ def create_sample_dataset() -> List[Dict[str, Any]]:
     ]
 
 
-def run_evaluation(dataset_path: str = "lab/eval/dataset.jsonl") -> Dict[str, Any]:
+def run_evaluation(dataset_path: str = "lab/eval/dataset.jsonl") -> dict[str, Any]:
     """Run evaluation on the test dataset."""
     print("Loading test dataset...")
     test_cases = load_test_dataset(dataset_path)
@@ -103,7 +103,7 @@ def run_evaluation(dataset_path: str = "lab/eval/dataset.jsonl") -> Dict[str, An
     return results
 
 
-def print_metrics(results: Dict[str, Any]):
+def print_metrics(results: dict[str, Any]):
     """Print evaluation metrics in a formatted way."""
     print("\n" + "=" * 50)
     print("EVALUATION RESULTS")

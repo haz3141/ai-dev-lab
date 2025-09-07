@@ -1,10 +1,12 @@
+import logging
+import time
+
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
-import time
-import logging
+
 from lab.dsp.summarize import Summarize
-from lab.security.guardian import guardian
 from lab.obs.audit import audit_logger
+from lab.security.guardian import guardian
 from mcp_server.tools.search_docs import search_documents_endpoint
 
 # Configure logging

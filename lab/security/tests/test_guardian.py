@@ -1,9 +1,8 @@
-"""
-Tests for Guardian security module.
-"""
+"""Tests for Guardian security module."""
 
 import os
 from unittest.mock import patch
+
 from lab.security.guardian import Guardian
 
 
@@ -21,7 +20,8 @@ class TestGuardian:
     def test_custom_allowlist(self):
         """Test custom allowlist from environment variable."""
         with patch.dict(
-            os.environ, {"GUARDIAN_ALLOW_TOOLS": "health,tools/summarize,tools/custom"}
+            os.environ,
+            {"GUARDIAN_ALLOW_TOOLS": "health,tools/summarize,tools/custom"},
         ):
             guardian = Guardian()
             assert "health" in guardian.allowlist
