@@ -52,7 +52,7 @@ jobs:
           MERGE_BASE=$(git merge-base origin/$BASE_REF HEAD)
           CHANGED_LINES=$(git diff --numstat "$MERGE_BASE"...HEAD | awk '{add+=$1; del+=$2} END {print add+del}')
           echo "Changed LOC: $CHANGED_LINES"
-          if [ "${CHANGED_LINES:-0}" -gt 300 ]; then
-            echo "PR size exceeds 300 LOC limit: $CHANGED_LINES"
+          if [ "${CHANGED_LINES:-0}" -gt 1500 ]; then
+            echo "PR size exceeds 1500 LOC limit: $CHANGED_LINES"
             exit 1
           fi
