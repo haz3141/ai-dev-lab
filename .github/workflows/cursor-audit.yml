@@ -45,7 +45,11 @@ jobs:
 
       - name: Check PR Size (≤300 changed LOC)
         run: |
-          MERGE_BASE=$(git merge-base origin/${{ github.base_ref }} HEAD)
+          # Fetch all branches to ensure we have the base ref
+          git fetch --all
+          # Use the base ref from GitHub context, fallback to main
+          BASE_REF=${GITHUB_BASE_REF:-main}
+          MERGE_BASE=$(git merge-base origin/$BASE_REF HEAD)
           CHANGED_LINES=$(git diff --numstat "$MERGE_BASE"...HEAD | awk '{add+=$1; del+=$2} END {print add+del}')
           echo "Changed LOC: $CHANGED_LINES"
           if [ "${CHANGED_LINES:-0}" -gt 300 ]; then
