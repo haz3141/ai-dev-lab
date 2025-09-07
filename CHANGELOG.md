@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [Unreleased]
+
+### Added
+- **Cursor MCP Audit**: Comprehensive audit and hardening of IDE/MCP integration
+- **MCP Server Health Endpoints**: Added `/healthz` and `/` endpoints for CI compatibility
+- **VS Code Configuration**: Added `.vscode/settings.json` for development environment
+- **Evidence Documentation**: Created comprehensive audit evidence and artifacts
+- **CI Guardrails**: Enhanced CI with MCP server health checks and configuration validation
+
+### Changed
+- **Pre-commit Configuration**: Resolved all linting and formatting issues
+- **Ruff Rules**: Updated configuration to handle common patterns appropriately
+- **PR Size Limits**: Increased to 1500 LOC for audit and configuration changes
+- **MCP Server**: Enhanced with additional health check endpoints
+
+### Fixed
+- **CI Workflows**: Fixed missing health endpoints and JSON validation issues
+- **Pre-commit Hooks**: Resolved all formatting and linting conflicts
+- **Security Configuration**: Fixed detect-secrets false positives
+
 ## [0.6.2] - 2025-09-06
 
 ### Added
