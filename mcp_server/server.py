@@ -33,6 +33,18 @@ def health():
     return {"ok": True, "version": "0.6.0"}
 
 
+@app.get("/healthz")
+def healthz():
+    """Health check endpoint for Kubernetes/CI - always allowed."""
+    return {"ok": True, "version": "0.6.0"}
+
+
+@app.get("/")
+def root():
+    """Root endpoint - always allowed."""
+    return {"ok": True, "version": "0.6.0", "message": "Lab MCP Server"}
+
+
 @app.post("/tools/search_docs")
 @guardian.guard_tool("tools/search_docs")
 def search_docs(req: SearchRequest, request: Request):
