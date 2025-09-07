@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ai-dev-lab"
-version = "0.6.0"
+version = "0.6.3"
 description = "AI Development Lab with MCP Server"
 authors = [{name = "AI Dev Lab Team"}]
 readme = "README.md"
