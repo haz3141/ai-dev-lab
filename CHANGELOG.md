@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased]
+## [Unreleased] — 2025-09-06
+
+(placeholder)
+
+## [v0.6.3] — 2025-09-06
 
 ### Added
 - **Cursor MCP Audit**: Comprehensive audit and hardening of IDE/MCP integration
