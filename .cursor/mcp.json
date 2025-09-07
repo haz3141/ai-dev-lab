@@ -1,7 +1,8 @@
 [
   {
     "name": "lab-server",
-    "url": "http://127.0.0.1:8000",
+    "url": "http://127.0.0.1:8765/sse",
+    "method": "sse",
     "allowTools": [
       "search_docs",
       "summarize",
@@ -13,6 +14,7 @@
       "audit_by_tool"
     ],
     "timeout": 30,
-    "retries": 3
+    "retries": 3,
+    "gracePeriodSec": 2
   }
 ]
