@@ -1,12 +1,12 @@
-"""
-Evaluation Metrics for Retrieval Systems
+"""Evaluation Metrics for Retrieval Systems
 
 Provides hit@k, MRR@k, and other retrieval evaluation metrics.
 """
 
-import numpy as np
-from typing import List, Dict, Any, Optional
 from dataclasses import dataclass
+from typing import Any
+
+import numpy as np
 
 
 @dataclass
@@ -14,35 +14,35 @@ class RetrievalResult:
     """Represents a single retrieval result."""
 
     query: str
-    retrieved_docs: List[str]
-    relevant_docs: List[str]
-    scores: Optional[List[float]] = None
+    retrieved_docs: list[str]
+    relevant_docs: list[str]
+    scores: list[float] | None = None
 
 
 @dataclass
 class EvaluationMetrics:
     """Container for evaluation metrics."""
 
-    hit_at_k: Dict[int, float]
-    mrr_at_k: Dict[int, float]
-    precision_at_k: Dict[int, float]
-    recall_at_k: Dict[int, float]
-    f1_at_k: Dict[int, float]
+    hit_at_k: dict[int, float]
+    mrr_at_k: dict[int, float]
+    precision_at_k: dict[int, float]
+    recall_at_k: dict[int, float]
+    f1_at_k: dict[int, float]
 
 
 class RetrievalEvaluator:
     """Evaluator for retrieval systems with deterministic testing capabilities."""
 
-    def __init__(self, k_values: List[int] = None):
+    def __init__(self, k_values: list[int] = None):
         self.k_values = k_values or [1, 3, 5, 10]
-        self.results: List[RetrievalResult] = []
+        self.results: list[RetrievalResult] = []
 
     def add_result(
         self,
         query: str,
-        retrieved_docs: List[str],
-        relevant_docs: List[str],
-        scores: Optional[List[float]] = None,
+        retrieved_docs: list[str],
+        relevant_docs: list[str],
+        scores: list[float] | None = None,
     ):
         """Add a retrieval result for evaluation."""
         result = RetrievalResult(
@@ -106,11 +106,7 @@ class RetrievalEvaluator:
         for result in self.results:
             top_k = result.retrieved_docs[:k]
             relevant_retrieved = sum(1 for doc in top_k if doc in result.relevant_docs)
-            recall = (
-                relevant_retrieved / len(result.relevant_docs)
-                if result.relevant_docs
-                else 0.0
-            )
+            recall = relevant_retrieved / len(result.relevant_docs) if result.relevant_docs else 0.0
             recalls.append(recall)
 
         return np.mean(recalls)
@@ -128,7 +124,11 @@ class RetrievalEvaluator:
     def evaluate_all(self) -> EvaluationMetrics:
         """Calculate all metrics for all k values."""
         metrics = EvaluationMetrics(
-            hit_at_k={}, mrr_at_k={}, precision_at_k={}, recall_at_k={}, f1_at_k={}
+            hit_at_k={},
+            mrr_at_k={},
+            precision_at_k={},
+            recall_at_k={},
+            f1_at_k={},
         )
 
         for k in self.k_values:
@@ -152,7 +152,7 @@ class DeterministicTestHarness:
         self.evaluator = evaluator or RetrievalEvaluator()
         self.stub_embeddings = {}
 
-    def create_stub_embedding(self, text: str) -> List[float]:
+    def create_stub_embedding(self, text: str) -> list[float]:
         """Create a deterministic stub embedding for text."""
         # Simple hash-based embedding for deterministic results
         import hashlib
@@ -177,9 +177,9 @@ class DeterministicTestHarness:
 
         return embedding
 
-    def cosine_similarity(self, a: List[float], b: List[float]) -> float:
+    def cosine_similarity(self, a: list[float], b: list[float]) -> float:
         """Calculate cosine similarity between two vectors."""
-        dot_product = sum(x * y for x, y in zip(a, b))
+        dot_product = sum(x * y for x, y in zip(a, b, strict=False))
         norm_a = sum(x * x for x in a) ** 0.5
         norm_b = sum(x * x for x in b) ** 0.5
 
@@ -188,9 +188,7 @@ class DeterministicTestHarness:
 
         return dot_product / (norm_a * norm_b)
 
-    def retrieve_documents(
-        self, query: str, documents: List[str], k: int = 5
-    ) -> List[str]:
+    def retrieve_documents(self, query: str, documents: list[str], k: int = 5) -> list[str]:
         """Retrieve top-k documents using stub embeddings."""
         query_embedding = self.create_stub_embedding(query)
 
@@ -204,7 +202,7 @@ class DeterministicTestHarness:
         similarities.sort(key=lambda x: x[0], reverse=True)
         return [doc for _, doc in similarities[:k]]
 
-    def run_evaluation(self, test_cases: List[Dict[str, Any]]) -> EvaluationMetrics:
+    def run_evaluation(self, test_cases: list[dict[str, Any]]) -> EvaluationMetrics:
         """Run evaluation on test cases using deterministic retrieval."""
         self.evaluator.clear_results()
 

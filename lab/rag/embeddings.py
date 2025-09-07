@@ -1,14 +1,14 @@
-"""
-RAG Embeddings Module - Step 6A
+"""RAG Embeddings Module - Step 6A
 
 Handles embedding generation and storage for RAG baseline.
 """
 
-import numpy as np
-from typing import List, Dict, Any
-import logging
 import json
+import logging
 from pathlib import Path
+from typing import Any
+
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -17,8 +17,7 @@ class EmbeddingGenerator:
     """Generates embeddings for text chunks."""
 
     def __init__(self, model_name: str = "all-MiniLM-L6-v2"):
-        """
-        Initialize the embedding generator.
+        """Initialize the embedding generator.
 
         Args:
             model_name: Name of the sentence transformer model
@@ -32,16 +31,15 @@ class EmbeddingGenerator:
         if self.model is None:
             try:
                 from sentence_transformers import SentenceTransformer
+
                 self.model = SentenceTransformer(self.model_name)
                 logger.info("Loaded embedding model: %s", self.model_name)
             except ImportError:
-                logger.error("sentence-transformers not installed. "
-                             "Using mock embeddings.")
+                logger.error("sentence-transformers not installed. Using mock embeddings.")
                 self.model = None
 
     def generate_embedding(self, text: str) -> np.ndarray:
-        """
-        Generate embedding for a single text.
+        """Generate embedding for a single text.
 
         Args:
             text: Input text
@@ -58,9 +56,8 @@ class EmbeddingGenerator:
         embedding = self.model.encode(text)
         return embedding
 
-    def generate_embeddings_batch(self, texts: List[str]) -> np.ndarray:
-        """
-        Generate embeddings for multiple texts.
+    def generate_embeddings_batch(self, texts: list[str]) -> np.ndarray:
+        """Generate embeddings for multiple texts.
 
         Args:
             texts: List of input texts
@@ -72,8 +69,7 @@ class EmbeddingGenerator:
 
         if self.model is None:
             # Mock embeddings for testing
-            return np.array([self._generate_mock_embedding(text)
-                             for text in texts])
+            return np.array([self._generate_mock_embedding(text) for text in texts])
 
         embeddings = self.model.encode(texts)
         return embeddings
@@ -82,6 +78,7 @@ class EmbeddingGenerator:
         """Generate a deterministic mock embedding for testing."""
         # Use text hash to create deterministic mock embedding
         import hashlib
+
         hash_obj = hashlib.md5(text.encode())
         hash_bytes = hash_obj.digest()
 
@@ -90,11 +87,10 @@ class EmbeddingGenerator:
 
         # Pad or truncate to match expected dimension
         if len(embedding) < self.embedding_dim:
-            padding = np.random.RandomState(42).normal(
-                0, 0.1, self.embedding_dim - len(embedding))
+            padding = np.random.RandomState(42).normal(0, 0.1, self.embedding_dim - len(embedding))
             embedding = np.concatenate([embedding, padding])
         else:
-            embedding = embedding[:self.embedding_dim]
+            embedding = embedding[: self.embedding_dim]
 
         # Normalize to unit vector
         embedding = embedding / np.linalg.norm(embedding)
@@ -105,8 +101,7 @@ class EmbeddingStore:
     """Stores and retrieves embeddings with metadata."""
 
     def __init__(self, store_path: str = "data/embeddings"):
-        """
-        Initialize the embedding store.
+        """Initialize the embedding store.
 
         Args:
             store_path: Path to store embeddings and metadata
@@ -125,7 +120,7 @@ class EmbeddingStore:
         if self.embeddings_file.exists() and self.metadata_file.exists():
             try:
                 self.embeddings = np.load(self.embeddings_file)
-                with open(self.metadata_file, 'r') as f:
+                with open(self.metadata_file) as f:
                     self.metadata = json.load(f)
                 logger.info("Loaded %d existing embeddings", len(self.metadata))
             except Exception as e:
@@ -133,10 +128,8 @@ class EmbeddingStore:
                 self.embeddings = None
                 self.metadata = []
 
-    def add_embeddings(self, embeddings: np.ndarray,
-                       metadata: List[Dict[str, Any]]):
-        """
-        Add new embeddings and metadata to the store.
+    def add_embeddings(self, embeddings: np.ndarray, metadata: list[dict[str, Any]]):
+        """Add new embeddings and metadata to the store.
 
         Args:
             embeddings: Array of embedding vectors
@@ -151,10 +144,8 @@ class EmbeddingStore:
         self._save()
         logger.info("Added %d embeddings to store", len(embeddings))
 
-    def search_similar(self, query_embedding: np.ndarray,
-                       top_k: int = 5) -> List[Dict[str, Any]]:
-        """
-        Search for similar embeddings.
+    def search_similar(self, query_embedding: np.ndarray, top_k: int = 5) -> list[dict[str, Any]]:
+        """Search for similar embeddings.
 
         Args:
             query_embedding: Query embedding vector
@@ -175,8 +166,8 @@ class EmbeddingStore:
         results = []
         for idx in top_indices:
             result = self.metadata[idx].copy()
-            result['similarity_score'] = float(similarities[idx])
-            result['embedding_index'] = int(idx)
+            result["similarity_score"] = float(similarities[idx])
+            result["embedding_index"] = int(idx)
             results.append(result)
 
         return results
@@ -185,26 +176,26 @@ class EmbeddingStore:
         """Save embeddings and metadata to disk."""
         try:
             np.save(self.embeddings_file, self.embeddings)
-            with open(self.metadata_file, 'w') as f:
+            with open(self.metadata_file, "w") as f:
                 json.dump(self.metadata, f, indent=2)
             logger.info("Saved embeddings to %s", self.store_path)
         except Exception as e:
             logger.error("Failed to save embeddings: %s", e)
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get statistics about the embedding store."""
         return {
             "total_embeddings": len(self.metadata) if self.metadata else 0,
-            "embedding_dimension": (self.embeddings.shape[1]
-                                    if self.embeddings is not None else 0),
-            "store_path": str(self.store_path)
+            "embedding_dimension": (self.embeddings.shape[1] if self.embeddings is not None else 0),
+            "store_path": str(self.store_path),
         }
 
 
-def process_documents_for_rag(documents: List[Dict[str, Any]],
-                             store_path: str = "data/embeddings") -> EmbeddingStore:
-    """
-    Process a list of documents for RAG by generating embeddings.
+def process_documents_for_rag(
+    documents: list[dict[str, Any]],
+    store_path: str = "data/embeddings",
+) -> EmbeddingStore:
+    """Process a list of documents for RAG by generating embeddings.
 
     Args:
         documents: List of documents with 'content' and 'metadata' keys
@@ -216,8 +207,8 @@ def process_documents_for_rag(documents: List[Dict[str, Any]],
     generator = EmbeddingGenerator()
     store = EmbeddingStore(store_path)
 
-    texts = [doc['content'] for doc in documents]
-    metadata = [doc['metadata'] for doc in documents]
+    texts = [doc["content"] for doc in documents]
+    metadata = [doc["metadata"] for doc in documents]
 
     logger.info("Generating embeddings for %d documents", len(documents))
     embeddings = generator.generate_embeddings_batch(texts)

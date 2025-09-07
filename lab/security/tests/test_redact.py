@@ -1,8 +1,6 @@
-"""
-Tests for PII redaction utilities.
-"""
+"""Tests for PII redaction utilities."""
 
-from lab.security.redact import PIIRedactor, PIIMatch
+from lab.security.redact import PIIMatch, PIIRedactor
 
 
 class TestPIIRedactor:

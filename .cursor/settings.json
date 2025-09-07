@@ -5,5 +5,26 @@
   "contextWindow": 128000,
   "includeCodeContext": true,
   "includeGitContext": true,
-  "includeTerminalContext": true
+  "includeTerminalContext": true,
+  "includePaths": [
+    "app/",
+    "lab/",
+    "mcp_server/",
+    "docs/",
+    "tests/",
+    "evidence/",
+    ".github/workflows/"
+  ],
+  "excludePaths": [
+    "node_modules/",
+    ".venv/",
+    "__pycache__/",
+    "*.pyc",
+    "data/",
+    "logs/",
+    ".coverage",
+    "coverage.xml",
+    "evidence/**/artifacts/**"
+  ],
+  "contextCap": 50000
 }

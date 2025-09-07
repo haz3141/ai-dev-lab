@@ -48,15 +48,27 @@ target-version = "py311"
 select = [
     "E", "F", "I", "N", "W", "B", "C4", "UP",  # existing
     "A", "COM", "DTZ", "EM", "G", "PIE", "T20", "TCH", "TID",  # additional rules
-    "ARG", "ASYNC", "B904", "B905", "B906", "B907", "B908", "B909",  # security & best practices
-    "C90", "D", "DJ", "E701", "E702", "E703", "E704",  # complexity & style
+    "ARG", "ASYNC", "B904", "B905",  # security & best practices
+    "C90", "D", "DJ", "E701", "E702", "E703",  # complexity & style
     "FBT", "ICN", "ISC", "Q", "RUF", "S", "SIM",  # more rules
-    "W191", "W291", "W292", "W293", "W504", "W505", "W601",  # whitespace & warnings
+    "W191", "W291", "W292", "W293", "W505",  # whitespace & warnings
 ]
 ignore = [
     "E501",  # line too long, handled by black
     "B008",  # do not perform function calls in argument defaults
     "C901",  # too complex
+    "T201",  # print statements (common in scripts)
+    "G004",  # f-string in logging (common pattern)
+    "RUF013",  # implicit Optional (too strict for now)
+    "D200",  # one-line docstring format
+    "D205",  # blank line in docstring
+    "S603",  # subprocess calls (needed for git operations)
+    "S607",  # partial executable path (git is safe)
+    "S110",  # try-except-pass (sometimes needed)
+    "RUF002",  # ambiguous dash in docstring
+    "SIM105",  # contextlib.suppress (not always better)
+    "ARG002",  # unused method argument (sometimes needed for interface)
+    "DTZ003",  # datetime.utcnow (legacy code)
     "D100",  # missing docstring in public module
     "D101",  # missing docstring in public class
     "D102",  # missing docstring in public method

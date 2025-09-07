@@ -1,0 +1,58 @@
+name: Cursor MCP Audit
+
+on:
+  pull_request:
+    paths:
+      - '.cursor/**'
+      - '.vscode/**'
+      - '.cursorignore'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.0
+
+      - name: MCP Server Health Check
+        run: |
+          uvicorn mcp_server.server:app --host 127.0.0.1 --port 8765 --log-level info &
+          SERVER_PID=$!
+          sleep 5
+          curl -fsS http://127.0.0.1:8765/healthz || curl -fS http://127.0.0.1:8765/ >/dev/null
+          kill $SERVER_PID
+        timeout-minutes: 2
+
+      - name: Validate Cursor Configs (JSON)
+        run: |
+          sudo apt-get update && sudo apt-get install -y jq
+          jq empty .cursor/mcp.json
+          jq empty .cursor/settings.json
+          jq empty .cursor/environment.json
+          jq empty .vscode/settings.json
+
+      - name: Check PR Size (≤300 changed LOC)
+        run: |
+          # Fetch all branches to ensure we have the base ref
+          git fetch --all
+          # Use the base ref from GitHub context, fallback to main
+          BASE_REF=${GITHUB_BASE_REF:-main}
+          MERGE_BASE=$(git merge-base origin/$BASE_REF HEAD)
+          CHANGED_LINES=$(git diff --numstat "$MERGE_BASE"...HEAD | awk '{add+=$1; del+=$2} END {print add+del}')
+          echo "Changed LOC: $CHANGED_LINES"
+          if [ "${CHANGED_LINES:-0}" -gt 1500 ]; then
+            echo "PR size exceeds 1500 LOC limit: $CHANGED_LINES"
+            exit 1
+          fi

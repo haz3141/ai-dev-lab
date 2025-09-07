@@ -1,10 +1,12 @@
+import logging
+import time
+
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
-import time
-import logging
+
 from lab.dsp.summarize import Summarize
-from lab.security.guardian import guardian
 from lab.obs.audit import audit_logger
+from lab.security.guardian import guardian
 from mcp_server.tools.search_docs import search_documents_endpoint
 
 # Configure logging
@@ -29,6 +31,18 @@ summarizer = Summarize()
 def health():
     """Health check endpoint - always allowed."""
     return {"ok": True, "version": "0.6.0"}
+
+
+@app.get("/healthz")
+def healthz():
+    """Health check endpoint for Kubernetes/CI - always allowed."""
+    return {"ok": True, "version": "0.6.0"}
+
+
+@app.get("/")
+def root():
+    """Root endpoint - always allowed."""
+    return {"ok": True, "version": "0.6.0", "message": "Lab MCP Server"}
 
 
 @app.post("/tools/search_docs")

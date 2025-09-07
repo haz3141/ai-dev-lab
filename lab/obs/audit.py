@@ -1,16 +1,16 @@
-"""
-Audit Logging for MCP Server
+"""Audit Logging for MCP Server
 
 Provides JSONL audit logging with request correlation and PII-safe outputs.
 """
 
 import json
 import os
-import uuid
 import time
+import uuid
+from dataclasses import asdict, dataclass
 from datetime import datetime
-from typing import Dict, Any, Optional, List
-from dataclasses import dataclass, asdict
+from typing import Any
+
 from lab.security.redact import redactor
 
 
@@ -22,12 +22,12 @@ class AuditEvent:
     request_id: str
     event_type: str
     tool_name: str
-    input_data: Dict[str, Any]
-    output_data: Dict[str, Any]
-    user_id: Optional[str] = None
-    session_id: Optional[str] = None
-    duration_ms: Optional[float] = None
-    error: Optional[str] = None
+    input_data: dict[str, Any]
+    output_data: dict[str, Any]
+    user_id: str | None = None
+    session_id: str | None = None
+    duration_ms: float | None = None
+    error: str | None = None
 
 
 class AuditLogger:
@@ -60,8 +60,8 @@ class AuditLogger:
     def log_tool_call(
         self,
         tool_name: str,
-        input_data: Dict[str, Any],
-        output_data: Dict[str, Any],
+        input_data: dict[str, Any],
+        output_data: dict[str, Any],
         start_time: float = None,
         user_id: str = None,
         session_id: str = None,
@@ -100,7 +100,7 @@ class AuditLogger:
         self,
         event_type: str,
         tool_name: str,
-        details: Dict[str, Any],
+        details: dict[str, Any],
         user_id: str = None,
     ) -> str:
         """Log a security-related event."""
@@ -127,14 +127,14 @@ class AuditLogger:
         with open(self.log_path, "a") as f:
             f.write(json.dumps(event_dict) + "\n")
 
-    def get_recent_events(self, limit: int = 100) -> List[Dict[str, Any]]:
+    def get_recent_events(self, limit: int = 100) -> list[dict[str, Any]]:
         """Get recent audit events."""
         events = []
 
         if not os.path.exists(self.log_path):
             return events
 
-        with open(self.log_path, "r") as f:
+        with open(self.log_path) as f:
             lines = f.readlines()
 
         # Get last N lines
@@ -149,14 +149,14 @@ class AuditLogger:
 
         return events
 
-    def get_events_by_request_id(self, request_id: str) -> List[Dict[str, Any]]:
+    def get_events_by_request_id(self, request_id: str) -> list[dict[str, Any]]:
         """Get all events for a specific request ID."""
         events = []
 
         if not os.path.exists(self.log_path):
             return events
 
-        with open(self.log_path, "r") as f:
+        with open(self.log_path) as f:
             for line in f:
                 if line.strip():
                     try:
@@ -168,22 +168,18 @@ class AuditLogger:
 
         return events
 
-    def get_events_by_tool(
-        self, tool_name: str, limit: int = 100
-    ) -> List[Dict[str, Any]]:
+    def get_events_by_tool(self, tool_name: str, limit: int = 100) -> list[dict[str, Any]]:
         """Get recent events for a specific tool."""
         events = []
 
         if not os.path.exists(self.log_path):
             return events
 
-        with open(self.log_path, "r") as f:
+        with open(self.log_path) as f:
             lines = f.readlines()
 
         # Search from most recent
-        for line in reversed(
-            lines[-limit * 2 :]
-        ):  # Look at more lines to find enough matches
+        for line in reversed(lines[-limit * 2 :]):  # Look at more lines to find enough matches
             if line.strip():
                 try:
                     event = json.loads(line)

@@ -1,12 +1,12 @@
-"""
-Deterministic tests for RAG ingestion - Step 6A
+"""Deterministic tests for RAG ingestion - Step 6A
 
 Tests chunking and embedding generation with fixed seeds and inputs.
 """
 
 import numpy as np
-from lab.rag.ingest import DocumentIngester
+
 from lab.rag.embeddings import EmbeddingGenerator, EmbeddingStore
+from lab.rag.ingest import DocumentIngester
 
 
 class TestDocumentIngestion:
@@ -80,7 +80,7 @@ class TestDocumentIngestion:
 
         # Chunk IDs should be identical
         assert len(chunks1) == len(chunks2)
-        for c1, c2 in zip(chunks1, chunks2):
+        for c1, c2 in zip(chunks1, chunks2, strict=False):
             assert c1.chunk_id == c2.chunk_id
             assert c1.content == c2.content
 
@@ -120,11 +120,7 @@ class TestEmbeddingGeneration:
         """Test batch embedding generation."""
         generator = EmbeddingGenerator()
 
-        texts = [
-            "First test text.",
-            "Second test text.",
-            "Third test text."
-        ]
+        texts = ["First test text.", "Second test text.", "Third test text."]
 
         embeddings = generator.generate_embeddings_batch(texts)
 
@@ -162,7 +158,7 @@ class TestEmbeddingStore:
         metadata = [
             {"chunk_id": "chunk_1", "content": "First chunk"},
             {"chunk_id": "chunk_2", "content": "Second chunk"},
-            {"chunk_id": "chunk_3", "content": "Third chunk"}
+            {"chunk_id": "chunk_3", "content": "Third chunk"},
         ]
 
         store.add_embeddings(embeddings, metadata)
@@ -190,7 +186,7 @@ class TestEmbeddingStore:
         metadata = [
             {"chunk_id": "chunk_1", "content": "First"},
             {"chunk_id": "chunk_2", "content": "Second"},
-            {"chunk_id": "chunk_3", "content": "Third"}
+            {"chunk_id": "chunk_3", "content": "Third"},
         ]
 
         store.add_embeddings(embeddings, metadata)
@@ -202,7 +198,7 @@ class TestEmbeddingStore:
 
         # Results should be identical
         assert len(results1) == len(results2)
-        for r1, r2 in zip(results1, results2):
+        for r1, r2 in zip(results1, results2, strict=False):
             assert r1["chunk_id"] == r2["chunk_id"]
             assert abs(r1["similarity_score"] - r2["similarity_score"]) < 1e-6
 
@@ -218,12 +214,12 @@ class TestIntegration:
         documents = [
             {
                 "content": "This is the first test document about machine learning.",
-                "metadata": {"doc_id": "doc_1", "title": "ML Document"}
+                "metadata": {"doc_id": "doc_1", "title": "ML Document"},
             },
             {
                 "content": "This is the second test document about natural language processing.",
-                "metadata": {"doc_id": "doc_2", "title": "NLP Document"}
-            }
+                "metadata": {"doc_id": "doc_2", "title": "NLP Document"},
+            },
         ]
 
         # Process documents

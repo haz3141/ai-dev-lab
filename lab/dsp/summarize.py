@@ -28,8 +28,4 @@ class Summarize(dspy.Module):
             return res.summary
         except Exception:
             # Return a simple fallback for now
-            return (
-                f"Summary: {passage[:50]}..."
-                if len(passage) > 50
-                else f"Summary: {passage}"
-            )
+            return f"Summary: {passage[:50]}..." if len(passage) > 50 else f"Summary: {passage}"
