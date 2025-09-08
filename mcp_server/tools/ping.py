@@ -1,9 +1,6 @@
-from mcp.server.fastmcp import FastMCP
-
-app = FastMCP.current()
-
-
-@app.tool()
-def ping(message: str = "ok") -> str:
-    """Health check tool; returns the input message."""
-    return message
+# mcp_server/tools/ping.py
+def register(app):
+    @app.tool()
+    def ping(message: str = "ok") -> str:
+        """Health check tool; echoes the input."""
+        return message
