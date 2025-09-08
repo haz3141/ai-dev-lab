@@ -4,6 +4,11 @@
       "command": ".venv/bin/python",
       "args": ["-m", "mcp_server.simple_server"],
       "env": {}
+    },
+    "dev-lab-server": {
+      "command": "curl",
+      "args": ["-s", "http://127.0.0.1:8765"],
+      "env": {}
     }
   }
 }

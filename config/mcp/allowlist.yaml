@@ -10,3 +10,7 @@ allow:
   - tools.list_directory
   - tools.run_eval
   - tools.check_gates
+  - tools.ensure_on_feature_branch
+  - tools.safe_commit
+  - tools.create_pr
+  - tools.branch_diff_summary

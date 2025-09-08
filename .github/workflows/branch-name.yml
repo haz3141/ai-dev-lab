@@ -1,0 +1,12 @@
+name: Check Branch Name
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+jobs:
+  lint-branch-name:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: deepakputhraya/action-branch-name@v1
+        with:
+          regex: '^(feat|fix|chore|docs|refactor|perf|test|build|ci|revert)\/[a-z0-9._-]+$'
+          ignore: main|release\/.+|hotfix\/.+   # adjust if you use hotfix/*
