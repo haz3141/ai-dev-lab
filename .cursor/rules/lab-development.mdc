@@ -1,0 +1,291 @@
+---
+description: Lab development and experimentation guidelines
+globs: ["lab/**/*"]
+alwaysApply: false
+---
+
+# Lab Development Rules - AI-Dev-Lab v0.6.4
+
+## Lab Environment Purpose
+
+### Experimental Development
+- **Innovation Space**: Test new ideas without production impact
+- **Rapid Prototyping**: Quick iteration and validation cycles
+- **Research**: Explore new technologies and approaches
+- **Evaluation**: Comprehensive testing before production promotion
+
+### Development Workflow
+```
+Lab Development Cycle:
+1. Idea → Prototype (lab/)
+2. Test → Validate (eval/)
+3. Refine → Optimize (lab/)
+4. Promote → Production (app/)
+```
+
+## Promotion Criteria
+
+### Technical Requirements
+- ✅ **Test Coverage**: ≥ 68% with comprehensive test suites
+- ✅ **Security Audit**: Passes Guardian security validation
+- ✅ **Performance**: Meets established baselines
+- ✅ **Documentation**: Complete API and usage documentation
+- ✅ **Code Review**: Approved by technical review board
+
+### Quality Gates
+```yaml
+# Promotion checklist
+promotion_requirements:
+  testing:
+    unit_tests: true
+    integration_tests: true
+    security_tests: true
+    performance_tests: true
+  security:
+    audit_passed: true
+    vulnerabilities_fixed: true
+    pii_handling_verified: true
+  documentation:
+    api_docs_complete: true
+    usage_examples: true
+    deployment_guide: true
+  evaluation:
+    metrics_baseline_met: true
+    comparative_analysis_done: true
+```
+
+## Experimental Result Documentation
+
+### Experiment Structure
+```markdown
+# Experiment Report: [Experiment Name]
+
+## Hypothesis
+What we expect to achieve and why.
+
+## Methodology
+- Data sources and preparation
+- Experimental setup and parameters
+- Control conditions and variables
+- Success criteria and metrics
+
+## Results
+- Quantitative metrics and measurements
+- Qualitative observations
+- Unexpected findings
+- Performance comparisons
+
+## Analysis
+- What worked and what didn't
+- Key insights and learnings
+- Limitations and constraints
+- Recommendations for next steps
+
+## Next Steps
+- Proposed improvements
+- Additional experiments needed
+- Production readiness assessment
+```
+
+### Result Tracking
+- **Version Control**: All experiments tracked with git tags
+- **Metrics Storage**: Centralized metrics collection
+- **Artifact Preservation**: Models, configs, and data preserved
+- **Knowledge Transfer**: Findings documented for team reference
+
+## Testing Patterns
+
+### Lab-Specific Tests
+```python
+# lab/tests/test_experiment.py
+import pytest
+from lab.experiment_module import ExperimentalFeature
+
+class TestExperimentalFeature:
+    @pytest.fixture
+    def setup_experiment(self):
+        """Setup experimental environment."""
+        return ExperimentalFeature(config=lab_config)
+
+    def test_hypothesis_validation(self, setup_experiment):
+        """Test that experiment validates core hypothesis."""
+        result = setup_experiment.run_experiment()
+        assert result.meets_expectations()
+
+    def test_performance_baseline(self, setup_experiment):
+        """Ensure experiment meets minimum performance requirements."""
+        metrics = setup_experiment.evaluate_performance()
+        assert metrics.accuracy > 0.75
+        assert metrics.latency < 200
+
+    def test_security_compliance(self, setup_experiment):
+        """Validate security requirements for experimental features."""
+        security_check = setup_experiment.security_audit()
+        assert security_check.passes_all_checks()
+```
+
+### Integration Testing
+- **Cross-Component**: Test interactions between lab components
+- **End-to-End**: Complete workflow validation
+- **Performance**: Load and stress testing
+- **Failure Scenarios**: Error handling and recovery
+
+## Local Evaluation Commands
+
+### Development Setup
+```bash
+# Setup lab environment
+cd /Users/hazael/Code/ai-dev-lab
+python -m venv lab_env
+source lab_env/bin/activate
+pip install -r requirements-dev.txt
+```
+
+### Running Evaluations
+```bash
+# Run lab-specific evaluation
+python lab/eval/run_eval.py --config lab.yaml --dataset lab_dev.jsonl
+
+# Run RAG evaluation pipeline
+python eval/pipeline/run_eval.py --target lab/rag
+
+# Run security validation
+python lab/security/guardian.py --audit lab/
+
+# Generate evaluation report
+python eval/pipeline/run_eval.py --report --output lab_report.md
+```
+
+### Debug Commands
+```bash
+# Debug RAG retrieval
+python lab/rag/qa.py --debug --query "test query"
+
+# Profile performance
+python -m cProfile lab/experiment.py
+
+# Validate configuration
+python lab/config_validator.py --check lab/rag/config.yaml
+```
+
+## MCP Server Testing
+
+### Server Testing Procedures
+```python
+# lab/tests/test_mcp_server.py
+import pytest
+from mcp_server import LabMCPServer
+
+class TestLabMCPServer:
+    @pytest.fixture
+    async def server_setup(self):
+        """Setup test MCP server instance."""
+        server = LabMCPServer()
+        await server.start()
+        yield server
+        await server.stop()
+
+    async def test_tool_registration(self, server_setup):
+        """Test that experimental tools are properly registered."""
+        tools = await server_setup.list_tools()
+        assert "experimental_tool" in [t.name for t in tools]
+
+    async def test_tool_execution(self, server_setup):
+        """Test experimental tool execution."""
+        result = await server_setup.call_tool("experimental_tool", {})
+        assert result.success
+        assert "expected_output" in result.data
+
+    async def test_error_handling(self, server_setup):
+        """Test error handling for experimental tools."""
+        with pytest.raises(ToolError):
+            await server_setup.call_tool("experimental_tool", {"invalid": "params"})
+```
+
+### Tool Validation Checklist
+- ✅ **Registration**: Tool properly registered with server
+- ✅ **Parameters**: Input validation working correctly
+- ✅ **Execution**: Tool executes without errors
+- ✅ **Output**: Results formatted correctly
+- ✅ **Error Handling**: Proper error responses
+- ✅ **Security**: Security validation passes
+
+## Development Best Practices
+
+### Code Organization
+- **Modular Design**: Components should be independently testable
+- **Configuration Management**: Externalize all configuration
+- **Logging**: Comprehensive logging for debugging
+- **Error Handling**: Graceful failure with informative messages
+
+### Experiment Tracking
+```python
+# lab/experiment_tracker.py
+@dataclass
+class Experiment:
+    name: str
+    version: str
+    hypothesis: str
+    parameters: Dict[str, Any]
+    start_time: datetime
+    status: str  # running, completed, failed
+
+    def log_metric(self, name: str, value: float):
+        """Log experiment metric."""
+        # Implementation for metric logging
+
+    def save_results(self, results: Dict[str, Any]):
+        """Save experiment results."""
+        # Implementation for result persistence
+```
+
+### Risk Management
+- **Isolation**: Lab experiments isolated from production
+- **Resource Limits**: Prevent resource exhaustion
+- **Monitoring**: Continuous monitoring of experimental systems
+- **Cleanup**: Automatic cleanup of experimental artifacts
+
+## Collaboration Guidelines
+
+### Code Sharing
+- **Branch Strategy**: Feature branches for experimental work
+- **Pull Requests**: Detailed PR descriptions with experiment context
+- **Code Reviews**: Focus on experimental methodology and validation
+- **Knowledge Sharing**: Regular sync meetings for experiment updates
+
+### Documentation Standards
+- **Experiment Logs**: Daily logging of progress and findings
+- **Weekly Reports**: Summary of experimental results and insights
+- **Final Reports**: Comprehensive documentation before promotion
+- **Lessons Learned**: Post-experiment retrospective documentation
+
+## Performance Monitoring
+
+### Metrics Collection
+- **Experiment Metrics**: Track success rates and performance
+- **System Metrics**: Monitor resource usage and stability
+- **User Metrics**: Gather feedback on experimental features
+- **Business Metrics**: Track impact and value generation
+
+### Alerting and Monitoring
+- **Threshold Alerts**: Automatic alerts for metric deviations
+- **Health Checks**: Regular validation of experimental systems
+- **Performance Dashboards**: Visual monitoring of key metrics
+- **Incident Response**: Procedures for experimental system issues
+
+## Graduation Process
+
+### Promotion Workflow
+1. **Experiment Complete**: All hypotheses tested and results documented
+2. **Quality Assurance**: Passes all lab quality gates
+3. **Security Review**: Security audit completed and approved
+4. **Performance Validation**: Meets production performance requirements
+5. **Documentation**: Complete production-ready documentation
+6. **Code Review**: Approved by production review board
+7. **Deployment**: Gradual rollout with monitoring
+
+### Post-Promotion Monitoring
+- **Performance Tracking**: Compare lab vs production performance
+- **User Feedback**: Monitor user adoption and satisfaction
+- **Issue Tracking**: Monitor for production-specific issues
+- **Optimization**: Continuous improvement based on production data

@@ -1,22 +1,11 @@
 {
   "commands": {
-    "dev:mcp": "uvicorn mcp_server.server:app --reload --host 127.0.0.1 --port 8765",
-    "health": "curl -fsS http://127.0.0.1:8765/healthz || curl -fsS http://127.0.0.1:8765/ | head -n 1",
-    "test": "pytest -q",
-    "test:security": "pytest lab/security/tests/ -v",
-    "test:integration": "pytest lab/tests/ -v",
-    "eval": "python lab/eval/run_eval.py --dataset lab/eval/dataset.jsonl --k 5",
-    "eval:full": "python lab/eval/run_eval.py --dataset lab/eval/dataset.jsonl --k 5 --output eval_results.json",
-    "obs:ingest": "python lab/obs/ingest.py --path logs/audit/*.jsonl",
-    "obs:audit": "python lab/obs/audit.py --recent 100",
-    "lint": "ruff check .",
-    "format": "ruff format . && black .",
-    "format:check": "ruff format --check . && black --check .",
-    "docs:check": "find docs/ -name '*.md' -exec grep -L '<!-- Version:' {} \\;"
-  },
-  "environment": {
-    "PYTHONPATH": ".",
-    "LOG_LEVEL": "INFO",
-    "GUARDIAN_ALLOW_TOOLS": "health,tools/search_docs,tools/summarize"
+    "pytest": "python -m pytest",
+    "ruff": "python -m ruff",
+    "mcp-list": "cursor-agent mcp list",
+    "mcp-tools": "cursor-agent mcp list-tools lab-server",
+    "eval": "python eval/run.py --dataset eval/data/lab/lab_dev.jsonl --output eval/runs/$(date +%Y%m%d-%H%M%S)",
+    "test": "python -m pytest tests/",
+    "mcp": ".venv/bin/python -m mcp_server.simple_server"
   }
 }

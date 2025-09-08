@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mcp-promotions"
-version = "0.6.2"
+version = "0.6.4"
 description = "MCP Promotions Server - Production runtime for promoted lab tools"
 authors = [
     {name = "AI Dev Lab", email = "dev@ai-dev-lab.com"}

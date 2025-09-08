@@ -1,41 +1,50 @@
-# Project Guardrails for AI Dev Lab
+---
+description: Core project guidelines and security requirements
+alwaysApply: true
+---
 
-## Always
-- Use only tools in `.cursor/mcp.json` allowlist
-- Prefer small, reviewable diffs. After code edits: run `test`
-- For evaluation: run `eval` and attach markdown summary
-- Keep docs current: update README/CHANGELOG when changing APIs
-- Follow the single formatter policy: Black is canonical, Ruff defers to Black
-- Use conventional commits format for all changes
-- Add version headers to documentation files: `<!-- Version: 0.6.0 -->`
+# Project Guardrails - AI-Dev-Lab v0.6.4
 
-## Never
-- Add or reveal secrets; do not touch `.env*` files
-- Edit outside allowed paths during `code-freeze` (only config/docs/CI)
-- Disable redaction or Guardian security policies
-- Bypass the audit logging system
-- Make breaking changes without proper deprecation notices
-- Commit directly to main branch (use feature branches)
+## Project Overview
+- **Project**: AI-Enhanced Dev Lab v0.6.4
+- **Focus**: MCP servers and RAG evaluation gates
+- **Architecture**: Lab-to-app promotion workflow with security gates
 
-## Code Freeze Rules (ops/cursor-setup-and-audit-* branches)
-- **ONLY** edit: `.cursor/**`, `.github/**`, `docs/**`, `pyproject.toml`, `requirements*.txt`, `README.md`, `CHANGELOG.md`
-- **FORBIDDEN** during freeze: `app/`, `lab/` (except `.md`, `.json`, `.yml`, `.yaml`, `.toml`, `.txt`, `.sh` files)
-- All changes must be config, documentation, or CI-related
+## Core Guidelines
 
-## Security Requirements
-- All tool calls must go through Guardian security policy
-- All operations must be logged via audit system
-- PII must be redacted in outputs
-- No hardcoded secrets or credentials
+### Security Compliance
+- All changes must pass security validation through Guardian
+- PII redaction required for any sensitive data handling
+- Audit logging mandatory for security-related operations
+- Freeze guard compliance for production deployments
 
-## Testing Requirements
-- Run `test` after any code changes
-- Run `test:security` for security-related changes
-- Run `eval` for AI/ML model changes
-- All tests must pass before submitting PR
+### Code Standards
+- **Black formatting** as single source of truth
+- **Conventional commits** for all changes (enforced by commitlint)
+- **Code freeze policy**: 300 line limit for critical changes
+- **Test coverage**: Minimum 68% threshold required
 
-## Documentation Requirements
-- Update relevant docs for any API changes
-- Add version headers to new documentation
-- Include examples for new features
-- Keep architecture docs current
+### Documentation Requirements
+- **Version headers** required: `<!-- Version: 0.6.4 -->`
+- **Cross-references** must be maintained and updated
+- **Architecture diagrams** must reflect current state
+- **Release notes** required for all deployments
+
+### Development Workflow
+- **Lab → App promotion** requires evaluation gates
+- **Experimental features** must be documented with results
+- **MCP server changes** require allowlist validation
+- **RAG evaluation** must meet performance baselines
+
+## Quality Gates
+- ✅ Security audit passes
+- ✅ Test coverage ≥ 68%
+- ✅ Documentation updated
+- ✅ Conventional commit format
+- ✅ Black formatting applied
+
+## Risk Mitigation
+- Never commit untested experimental code to main
+- Always validate MCP tool changes against allowlist
+- Maintain audit trails for security decisions
+- Freeze guard prevents unauthorized production changes

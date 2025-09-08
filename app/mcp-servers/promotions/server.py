@@ -1,5 +1,5 @@
 """
-MCP Promotions Server - v0.6.2
+MCP Promotions Server - v0.6.4
 
 Minimal runtime server for promoted MCP tools.
 This is a production-ready wrapper around lab functionality.
@@ -15,7 +15,7 @@ from pydantic import BaseModel
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="MCP Promotions Server (v0.6.2)")
+app = FastAPI(title="MCP Promotions Server (v0.6.4)")
 
 
 class SearchRequest(BaseModel):
@@ -29,7 +29,7 @@ class SummarizeRequest(BaseModel):
 @app.get("/health")
 def health():
     """Health check endpoint - always allowed."""
-    return {"ok": True, "version": "0.6.2", "service": "mcp-promotions"}
+    return {"ok": True, "version": "0.6.4", "service": "mcp-promotions"}
 
 
 @app.post("/tools/search_docs")
@@ -92,7 +92,7 @@ def summarize(req: SummarizeRequest, request: Request):
 def get_promotion_status():
     """Get current promotion status and available tools."""
     return {
-        "version": "0.6.2",
+        "version": "0.6.4",
         "promoted_tools": ["search_docs", "summarize"],
         "status": "active",
         "lab_dependencies": [

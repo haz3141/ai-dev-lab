@@ -1,0 +1,68 @@
+---
+description: Security policies and MCP server guidelines
+alwaysApply: true
+---
+
+# Security & MCP Rules - AI-Dev-Lab v0.6.4
+
+## Security Policies
+
+### Guardian Security Enforcement
+- **PII Redaction**: All sensitive data must be redacted before processing
+- **Input Validation**: All external inputs must be validated and sanitized
+- **Audit Logging**: Security operations must be logged with timestamps
+- **Access Control**: Tools must validate permissions before execution
+
+### Freeze Guard Compliance
+- **Production Protection**: Freeze guard prevents unauthorized changes
+- **Approval Workflow**: Critical changes require explicit approval
+- **Audit Trail**: All freeze operations must be logged
+- **Rollback Capability**: Emergency rollback procedures must be available
+
+### Tool Security Requirements
+- **Allowlist Validation**: All MCP tools must be validated against allowlist
+- **Parameter Sanitization**: Tool parameters must be sanitized
+- **Output Filtering**: Tool outputs must be filtered for sensitive data
+- **Error Handling**: Secure error messages without information leakage
+
+## MCP Server Guidelines
+
+### Tool Registration
+- **Naming Convention**: Tool names must use underscores (not hyphens)
+- **Description Accuracy**: Tool descriptions must accurately reflect functionality
+- **Parameter Validation**: All tool parameters must have validation schemas
+- **Error Responses**: Tools must return structured error responses
+
+### Server Architecture
+- **Health Checks**: All servers must implement health check endpoints
+- **Logging**: Structured logging with appropriate log levels
+- **Metrics**: Performance metrics collection for monitoring
+- **Graceful Shutdown**: Proper cleanup on server termination
+
+### Tool Allowlist Management
+```yaml
+# Required allowlist format
+tools:
+  - name: "tool_name"
+    description: "Tool description"
+    security_level: "low|medium|high"
+    requires_approval: true|false
+```
+
+### Security Validation Checklist
+- ✅ MCP tool names use underscores
+- ✅ Input parameters are validated
+- ✅ Sensitive data is redacted
+- ✅ Audit logs are generated
+- ✅ Freeze guard is respected
+- ✅ Allowlist validation passes
+
+## Risk Assessment
+- **High Risk**: Tools modifying system state require approval
+- **Medium Risk**: Tools accessing external resources
+- **Low Risk**: Read-only information tools
+
+## Emergency Procedures
+- **Security Breach**: Immediate freeze guard activation
+- **Tool Failure**: Graceful degradation with error logging
+- **Audit Alert**: Investigation and remediation within 24 hours

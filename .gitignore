@@ -12,3 +12,9 @@ logs/*.jsonl
 # OS
 .DS_Store
 Thumbs.db
+# Evaluation artifacts
+eval/runs/
+data/embeddings/
+data/documents/
+# Evidence (keep structure, ignore large files)
+evidence/learning/*/artifacts/

@@ -1,0 +1,19 @@
+{
+  "timestamp": "2025-01-09T00:00:00Z",
+  "version": "v0.6.4",
+  "run_id": "baseline",
+  "commit_hash": "HEAD",
+  "config": {
+    "dataset": "eval/data/lab/lab_dev.jsonl",
+    "thresholds": {
+      "recall_at_5": 0.85,
+      "recall_at_10": 0.92,
+      "mrr_at_10": 0.60,
+      "f1": 0.55,
+      "pass_rate": 0.80,
+      "hallucination_rate": 0.05,
+      "utilization_rate": 0.90,
+      "p95_s": 3.5
+    }
+  }
+}

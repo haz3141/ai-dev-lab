@@ -1,0 +1,37 @@
+{
+  "last_command": "",
+  "last_exit_code": 0,
+  "last_working_directory": "/Users/hazael/Code/ai-dev-lab",
+  "command_timeout": 10,
+  "stuck_commands": [
+    "python -m mcp_server.simple_server",
+    "uvicorn",
+    "jupyter",
+    "ipython",
+    "python -i",
+    "bash -i",
+    "zsh -i"
+  ],
+  "safe_commands": [
+    "git status",
+    "git log",
+    "ls",
+    "pwd",
+    "echo",
+    "cat",
+    "head",
+    "tail",
+    "grep",
+    "find",
+    "which",
+    "python --version",
+    "pip list"
+  ],
+  "last_successful_commands": [
+    "git status -s",
+    "git branch --show-current",
+    "git log --oneline -n 5",
+    "git clean -n -fdX",
+    "git clean -fdX"
+  ]
+}

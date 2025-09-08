@@ -1,30 +1,12 @@
 {
-  "model": "gpt-4o",
-  "temperature": 0.2,
-  "maxTokens": 2048,
-  "contextWindow": 128000,
-  "includeCodeContext": true,
-  "includeGitContext": true,
-  "includeTerminalContext": true,
-  "includePaths": [
-    "app/",
-    "lab/",
-    "mcp_server/",
-    "docs/",
-    "tests/",
-    "evidence/",
-    ".github/workflows/"
-  ],
-  "excludePaths": [
-    "node_modules/",
-    ".venv/",
-    "__pycache__/",
-    "*.pyc",
-    "data/",
-    "logs/",
-    ".coverage",
-    "coverage.xml",
-    "evidence/**/artifacts/**"
-  ],
-  "contextCap": 50000
+  "models": {
+    "default": "grok-code-fast-1",
+    "chat": "grok-code-fast-1",
+    "edit": "grok-code-fast-1"
+  },
+  "agent": {
+    "temperature": 0.1,
+    "askBeforeWrite": true,
+    "diffOnApply": true
+  }
 }

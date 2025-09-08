@@ -1,0 +1,100 @@
+name: RAG Evaluation Gates
+
+on:
+  push:
+    branches: [ main, develop, feat/v0.6.4-rag-gates ]
+  pull_request:
+    branches: [ main, develop ]
+  workflow_dispatch:
+
+jobs:
+  rag-gates:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+        pip install numpy scikit-learn
+    
+    - name: Create evaluation directories
+      run: |
+        mkdir -p eval/data/lab
+        mkdir -p eval/runs
+        mkdir -p eval/configs
+    
+    - name: Verify MCP Server
+      run: |
+        echo "🔧 Testing MCP server startup..."
+        python -c "
+        from mcp_server.server import app
+        print('✅ MCP server imports successfully')
+        "
+    
+    - name: Test MCP Tools
+      run: |
+        echo "🔧 Testing MCP tools..."
+        python -c "
+        from mcp_server.tools.terminal_helper import (
+            run_command, check_file_exists, read_file_safe, 
+            list_directory_safe, run_eval_safe, check_gates_safe
+        )
+        print('✅ All MCP tools import successfully')
+        "
+    
+    - name: Run RAG Evaluation
+      run: |
+        echo "🚀 Running RAG evaluation..."
+        python eval/run.py \
+          --dataset eval/data/lab/lab_dev.jsonl \
+          --output eval/runs/ci-test
+    
+    - name: Check Evaluation Gates
+      run: |
+        echo "🚪 Checking evaluation gates..."
+        python scripts/ci/parse_metrics.py eval/runs/ci-test/metrics.json
+    
+    - name: Test MCP Server
+      run: |
+        echo "🔧 Testing MCP server startup..."
+        python -m uvicorn mcp_server.server:app --host 127.0.0.1 --port 8000 &
+        SERVER_PID=$!
+        sleep 5
+        
+        # Test health endpoint
+        curl -f http://127.0.0.1:8000/health || exit 1
+        
+        # Test summarize endpoint (safe to test)
+        curl -X POST http://127.0.0.1:8000/tools/summarize \
+          -H "Content-Type: application/json" \
+          -d '{"passage": "Test passage for CI validation.", "max_sentences": 2}' || exit 1
+        
+        # Test audit endpoint (always available)
+        curl -f http://127.0.0.1:8000/audit/recent || exit 1
+        
+        kill $SERVER_PID
+        echo "✅ MCP server working correctly"
+    
+    - name: Security Validation
+      run: |
+        echo "🔒 Validating security configuration..."
+        python scripts/ci/validate_mcp_allowlist.py
+    
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: rag-gates-results
+        path: |
+          eval/runs/ci-test/
+          logs/
+        retention-days: 7

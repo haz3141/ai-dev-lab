@@ -1,0 +1,41 @@
+# RAG Evaluation Configuration for Lab
+dataset:
+  path: "eval/data/lab/lab_dev.jsonl"
+  size_limit: 100
+
+metrics:
+  retrieval:
+    k_values: [1, 3, 5, 10]
+    thresholds:
+      recall_at_5: 0.85
+      recall_at_10: 0.92
+      mrr_at_10: 0.60
+      hit_at_5: 0.80
+      hit_at_10: 0.90
+  
+  answer:
+    thresholds:
+      f1: 0.55
+      accuracy: 0.60
+  
+  judge:
+    thresholds:
+      pass_rate: 0.80
+  
+  faithfulness:
+    thresholds:
+      hallucination_rate: 0.05
+  
+  context:
+    thresholds:
+      utilization_rate: 0.90
+  
+  performance:
+    thresholds:
+      p95_s: 3.5
+
+evaluation:
+  deterministic: true
+  seed: 42
+  batch_size: 32
+  timeout_seconds: 300

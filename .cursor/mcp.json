@@ -1,20 +1,9 @@
-[
-  {
-    "name": "lab-server",
-    "url": "http://127.0.0.1:8765/sse",
-    "method": "sse",
-    "allowTools": [
-      "search_docs",
-      "summarize",
-      "rag_query",
-      "run_tests",
-      "eval_metrics",
-      "audit_recent",
-      "audit_by_request",
-      "audit_by_tool"
-    ],
-    "timeout": 30,
-    "retries": 3,
-    "gracePeriodSec": 2
+{
+  "mcpServers": {
+    "lab-server": {
+      "command": ".venv/bin/python",
+      "args": ["-m", "mcp_server.simple_server"],
+      "env": {}
+    }
   }
-]
+}

@@ -1,0 +1,150 @@
+---
+description: Code structure and development patterns
+globs: ["**/*.{py,js,ts,md}"]
+alwaysApply: false
+---
+
+# Code Organization - AI-Dev-Lab v0.6.4
+
+## Directory Structure
+
+### Lab vs App Separation
+```
+lab/                    # Experimental development
+├── dsp/               # Data science pipelines
+├── eval/              # Evaluation frameworks
+├── rag/               # RAG system components
+├── security/          # Security tools and policies
+└── tests/             # Lab-specific tests
+
+app/                    # Production-ready components
+├── mcp-servers/       # MCP server implementations
+└── ...               # Production services
+```
+
+### Evaluation Pipeline Structure
+```
+eval/
+├── configs/          # Evaluation configurations
+├── data/             # Test datasets
+├── pipeline/         # Evaluation execution
+├── prompts/          # Evaluation prompts
+└── runs/             # Evaluation results
+```
+
+## MCP Server Architecture
+
+### Server Organization
+- **Single Responsibility**: Each server handles one domain
+- **Tool Registration**: Tools registered with clear descriptions
+- **Health Endpoints**: `/health` endpoint for monitoring
+- **Graceful Shutdown**: Proper cleanup on termination
+
+### Tool Design Patterns
+```python
+# Tool registration pattern
+@server.tool()
+async def tool_name(args: ToolArgs) -> ToolResult:
+    """Clear tool description."""
+    # Input validation
+    # Business logic
+    # Output formatting
+    return result
+```
+
+## Code Standards
+
+### Import Organization (isort)
+```python
+# Standard library imports
+import os
+import sys
+
+# Third-party imports
+import yaml
+from fastapi import FastAPI
+
+# Local imports
+from .utils import helper_function
+```
+
+### Type Hints and Documentation
+- **Function Signatures**: Full type hints required
+- **Docstrings**: Google/NumPy style docstrings
+- **Return Types**: Explicit return type annotations
+- **Parameter Types**: Input parameter type hints
+
+### Error Handling Patterns
+```python
+try:
+    result = risky_operation()
+except SpecificException as e:
+    logger.error(f"Operation failed: {e}")
+    raise CustomError("User-friendly message") from e
+```
+
+## Testing Requirements
+
+### Test Coverage Thresholds
+- **Minimum Coverage**: 68% overall
+- **Critical Paths**: 85% for security-related code
+- **New Features**: 80% for new functionality
+- **Regression Tests**: Required for bug fixes
+
+### Test Organization
+```python
+# test_file.py
+import pytest
+from src.module import function_to_test
+
+class TestFunctionToTest:
+    def test_success_case(self):
+        # Arrange
+        input_data = "test_input"
+
+        # Act
+        result = function_to_test(input_data)
+
+        # Assert
+        assert result == expected_output
+
+    def test_error_case(self):
+        # Arrange & Act & Assert
+        with pytest.raises(ExpectedException):
+            function_to_test(invalid_input)
+```
+
+### Integration Testing
+- **MCP Server Tests**: End-to-end tool testing
+- **Evaluation Pipeline Tests**: Full pipeline validation
+- **Security Tests**: Penetration testing scenarios
+
+## Performance Guidelines
+
+### Code Efficiency
+- **Algorithm Complexity**: Document Big O for critical paths
+- **Memory Usage**: Monitor and optimize memory consumption
+- **Async Patterns**: Use async/await for I/O operations
+- **Caching**: Implement appropriate caching strategies
+
+### Monitoring and Metrics
+- **Performance Metrics**: Response times, throughput
+- **Error Rates**: Track and alert on error patterns
+- **Resource Usage**: CPU, memory, disk monitoring
+- **Health Checks**: Automated health validation
+
+## Development Workflow
+
+### Code Review Checklist
+- ✅ Type hints present and correct
+- ✅ Tests added/updated with sufficient coverage
+- ✅ Documentation updated
+- ✅ Security review completed
+- ✅ Performance impact assessed
+
+### Promotion Criteria (Lab → App)
+- ✅ All tests passing
+- ✅ Security audit cleared
+- ✅ Documentation complete
+- ✅ Performance benchmarks met
+- ✅ Code review approved
