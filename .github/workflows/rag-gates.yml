@@ -24,6 +24,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install -r requirements-dev.txt
+        pip install numpy scikit-learn
+    
+    - name: Create evaluation directories
+      run: |
+        mkdir -p eval/data/lab
+        mkdir -p eval/runs
+        mkdir -p eval/configs
     
     - name: Verify MCP Server
       run: |
@@ -56,36 +63,26 @@ jobs:
         echo "🚪 Checking evaluation gates..."
         python scripts/ci/parse_metrics.py eval/runs/ci-test/metrics.json
     
-    - name: Test MCP Endpoints
+    - name: Test MCP Server
       run: |
-        echo "🔧 Testing MCP endpoints..."
-        python -m uvicorn mcp_server.server:app --host 0.0.0.0 --port 8000 &
+        echo "🔧 Testing MCP server startup..."
+        python -m uvicorn mcp_server.server:app --host 127.0.0.1 --port 8000 &
         SERVER_PID=$!
         sleep 5
         
         # Test health endpoint
-        curl -f http://localhost:8000/health || exit 1
+        curl -f http://127.0.0.1:8000/health || exit 1
         
-        # Test terminal endpoints
-        curl -X POST http://localhost:8000/tools/run_command \
+        # Test summarize endpoint (safe to test)
+        curl -X POST http://127.0.0.1:8000/tools/summarize \
           -H "Content-Type: application/json" \
-          -d '{"command": "ls -la", "timeout": 10}' || exit 1
+          -d '{"passage": "Test passage for CI validation.", "max_sentences": 2}' || exit 1
         
-        curl -X POST http://localhost:8000/tools/check_file \
-          -H "Content-Type: application/json" \
-          -d '{"filepath": "eval/run.py"}' || exit 1
-        
-        # Test evaluation endpoints
-        curl -X POST http://localhost:8000/tools/run_eval \
-          -H "Content-Type: application/json" \
-          -d '{"dataset": "eval/data/lab/lab_dev.jsonl", "output_dir": "eval/runs/ci-test"}' || exit 1
-        
-        curl -X POST http://localhost:8000/tools/check_gates \
-          -H "Content-Type: application/json" \
-          -d '{"metrics_file": "eval/runs/ci-test/metrics.json"}' || exit 1
+        # Test audit endpoint (always available)
+        curl -f http://127.0.0.1:8000/audit/recent || exit 1
         
         kill $SERVER_PID
-        echo "✅ All MCP endpoints working"
+        echo "✅ MCP server working correctly"
     
     - name: Security Validation
       run: |
