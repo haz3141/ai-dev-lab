@@ -1,0 +1,52 @@
+name: dev-lab-mvp
+
+services:
+  mcp-lab:
+    # Dev profile: live-reload + bind mount; Prod profile: image only
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: dev-lab/mcp-lab:local
+    env_file:
+      - .env
+    environment:
+      # Safe defaults; OPENAI_API_KEY comes from .env
+      PORT: ${PORT:-8765}
+      WORKERS: ${WORKERS:-2}
+      PYTHONUNBUFFERED: ${PYTHONUNBUFFERED:-1}
+    ports:
+      - "${PORT:-8765}:8765"
+    # --- DEV profile: mount source and enable reload ---
+    volumes:
+      - ./:/app:delegated
+    command:
+      - /opt/venv/bin/uvicorn
+      - mcp_server.server:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "${PORT:-8765}"
+      - --reload
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:${PORT:-8765}/healthz || exit 1"]
+      interval: 10s
+      timeout: 2s
+      retries: 6
+    profiles: ["dev"]
+
+  mcp-lab-prod:
+    image: dev-lab/mcp-lab:local
+    env_file:
+      - .env
+    environment:
+      PORT: ${PORT:-8765}
+      WORKERS: ${WORKERS:-2}
+    ports:
+      - "${PORT:-8765}:8765"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:${PORT:-8765}/healthz || exit 1"]
+      interval: 10s
+      timeout: 2s
+      retries: 6
+    profiles: ["prod"]

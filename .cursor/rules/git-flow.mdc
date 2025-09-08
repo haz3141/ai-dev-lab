@@ -1,0 +1,57 @@
+---
+description: Git Flow guardrails for feature branches, conventional commits, and PR workflow
+alwaysApply: true
+---
+
+# Git Flow (Feature Branches + Conventional Commits)
+
+## Branching
+- Never commit directly to `main` or `release/*` branches
+- Always use feature branches with proper naming:
+  - `feat/<short-scope>-<short-desc>` for new features
+  - `fix/<short-scope>-<short-desc>` for bug fixes
+  - `chore/<short-scope>-<short-desc>` for maintenance tasks
+- If not on a feature branch, automatically create one using the appropriate naming convention
+
+## Commits (Conventional)
+- All commits must use Conventional Commits format: `type(scope)!: summary`
+- Keep subject line ≤ 72 characters
+- Wrap body at 72 characters with rationale and issue references
+- Use proper commit types: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+- Breaking changes must include `!` after scope
+
+## PRs (Pull Requests)
+- Create PRs after completing logical units of work
+- PR title should match the first commit subject
+- Include checklist: tests pass, lint clean, docs updated, issue linked
+- Add appropriate labels: `type/<type>`, `area/<scope>`, `status/ready`
+- Target `main` branch for all PRs
+
+## Gate Checks (Pre-commit)
+1) Confirm working tree is clean or staged appropriately
+2) Confirm current branch name matches feature branch pattern
+3) Run tests and linters; stop and fix if any fail
+4) Validate commit message format before committing
+
+## Cursor Integration
+- Always reference `@Commit` when crafting commit messages to see exact changes
+- Use `@Branch` when preparing PR summaries and change descriptions
+- Call MCP Git tools (`ensure_on_feature_branch`, `safe_commit`, `create_pr`) for enforcement
+
+## MCP Tool Enforcement
+- `ensure_on_feature_branch()` - Validates current branch and creates feature branch if needed
+- `safe_commit(type, scope, summary)` - Runs pre-commit checks then commits with conventional format
+- `create_pr(title, body, labels[])` - Creates PR with standard template and validation
+- `branch_diff_summary(base="main")` - Provides summary of changes for PR description
+
+## Workflow Enforcement
+- If user requests to commit to `main`, explain the rule and offer compliant alternative
+- Block direct commits to protected branches through MCP tool validation
+- Require PR creation for all changes going to `main`
+- Enforce conventional commit format for all commits
+
+## Branch Protection Integration
+- Works with GitHub/GitLab branch protection rules
+- Requires PR reviews and passing CI checks
+- Blocks force pushes to protected branches
+- Enforces status checks (lint, test, security scan)
