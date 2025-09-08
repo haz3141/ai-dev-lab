@@ -20,7 +20,7 @@ from mcp_server.tools.terminal_helper import (
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Lab MCP Server (v0.6.0)")
+app = FastAPI(title="Lab MCP Server (v0.6.4)")
 
 
 class SearchRequest(BaseModel):
@@ -67,19 +67,19 @@ summarizer = Summarize()
 @app.get("/health")
 def health():
     """Health check endpoint - always allowed."""
-    return {"ok": True, "version": "0.6.0"}
+    return {"ok": True, "version": "0.6.4"}
 
 
 @app.get("/healthz")
 def healthz():
     """Health check endpoint for Kubernetes/CI - always allowed."""
-    return {"ok": True, "version": "0.6.0"}
+    return {"ok": True, "version": "0.6.4"}
 
 
 @app.get("/")
 def root():
     """Root endpoint - always allowed."""
-    return {"ok": True, "version": "0.6.0", "message": "Lab MCP Server"}
+    return {"ok": True, "version": "0.6.4", "message": "Lab MCP Server"}
 
 
 @app.post("/tools/search_docs")
