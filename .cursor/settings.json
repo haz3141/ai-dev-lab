@@ -1,6 +1,6 @@
 {
-  "model": "gpt-4o",
-  "temperature": 0.2,
+  "model": "auto",
+  "temperature": 0.1,
   "maxTokens": 2048,
   "contextWindow": 128000,
   "includeCodeContext": true,

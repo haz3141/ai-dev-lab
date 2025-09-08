@@ -1,0 +1,37 @@
+# Freeze Guardrails - Cursor + MCP Only
+
+## Scope Lock (CRITICAL)
+- **ONLY** edit: `.cursor/**`, `mcp_server/**`, `docs/rules-guidelines/**`
+- **FORBIDDEN**: `app/`, `lab/` (except `.md` files), `tests/`, `evidence/`, `eval/`
+- This is a **read-only freeze** except for IDE config and MCP baseline
+
+## MCP Rules
+- Use **only** tools listed in `.cursor/mcp.json` allowlist
+- **Never** print to stdout from MCP tools (breaks JSON-RPC)
+- All MCP logs must go to stderr only
+- Keep tool responses **small and structured** (JSON)
+- Add tools **one at a time** and verify in Cursor after each
+
+## Git Rules
+- Use **conventional commits** with proper scopes
+- Commit **only** the intended config/server changes
+- Keep commits **small and focused**
+- One logical change per commit
+
+## Safety Rules
+- **Ask before any file write** (except allowed paths)
+- **No destructive actions** without explicit permission
+- **Prefer read-only tools** when available
+- **Test each change** before proceeding to next
+
+## Terminal Memory Rules
+- **NEVER** run interactive commands without timeout protection
+- Use `python -c "import module; print('success')"` for quick tests
+- For MCP server testing: use `test_mcp_quick.py` or similar timeout-protected scripts
+- **Avoid**: `python -m mcp_server.simple_server`, `uvicorn`, `jupyter`, `ipython` without timeout
+- **Prefer**: `python -c "..."` for quick validation, `timeout` commands when available
+
+## Verification Steps
+- After each MCP change: **Reload Cursor** → **Check MCP Logs** → **Verify tools list**
+- After each config change: **Test functionality** before committing
+- Before committing: **Review git diff** to ensure scope compliance
