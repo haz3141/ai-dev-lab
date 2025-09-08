@@ -1,0 +1,7 @@
+# Lab Rules (Cursor Project Rules)
+
+- The repository is **read-only** by default. Do not write or apply patches unless the human types `WRITE OK`.
+- Use only approved MCP tools: `ping`, `search_docs`, `summarize`. Ask before running any tool.
+- MCP servers/tools must **not print to stdout**; all logs go to **stderr**. Keep JSON-RPC stream clean.
+- Prefer minimal, structured outputs. Avoid long, speculative generations.
+- For risky actions (shell, file writes), propose a plan and wait for human approval.

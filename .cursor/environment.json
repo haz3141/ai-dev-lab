@@ -1,15 +1,7 @@
 {
+  "$schema": "https://cursor.sh/schemas/environment.json",
   "commands": {
-    "test": "pytest -q",
-    "test:security": "pytest lab/security/tests/ -v",
-    "test:integration": "pytest lab/tests/ -v",
-    "lint": "ruff check .",
-    "format:check": "ruff format --check . && black --check .",
-    "docs:check": "find docs/ -name '*.md' -exec grep -L '<!-- Version:' {} \\;"
-  },
-  "environment": {
-    "PYTHONPATH": ".",
-    "LOG_LEVEL": "INFO",
-    "PYTHONUNBUFFERED": "1"
+    "pytest_quiet": { "run": "pytest -q", "confirm": true },
+    "ruff_fix": { "run": "ruff check --fix .", "confirm": true }
   }
 }

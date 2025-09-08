@@ -1,13 +1,11 @@
-{
-  "mcpServers": {
-    "lab-server": {
-      "command": "/Users/hazael/Code/ai-dev-lab/.venv/bin/python",
-      "args": ["-m", "mcp_server.simple_server"],
-      "cwd": "/Users/hazael/Code/ai-dev-lab",
-      "env": {
-        "PYTHONUNBUFFERED": "1"
-      },
-      "allow": ["ping", "search_docs", "summarize"]
-    }
+[
+  {
+    "name": "lab-server",
+    "command": "/Users/hazael/Code/ai-dev-lab/.venv/bin/python",
+    "args": ["-m", "mcp_server.simple_server"],
+    "env": {
+      "PYTHONUNBUFFERED": "1"
+    },
+    "allowTools": ["ping", "search_docs", "summarize"]
   }
-}
+]
