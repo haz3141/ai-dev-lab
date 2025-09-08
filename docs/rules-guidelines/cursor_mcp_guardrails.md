@@ -1,3 +1,6 @@
+<!--
+Version: 0.6.4
+-->
 # Cursor + MCP Guardrails (Team)
 
 - Freeze-first workflow: repo is read-only unless the operator types `WRITE OK`.

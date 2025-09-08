@@ -171,12 +171,12 @@ jobs:
     
     - name: Check documentation version headers
       run: |
-        # Check for version headers in docs (new format)
-        MISSING_HEADERS=$(find docs/ -name "*.md" -exec sh -c 'head -n1 "$1" | grep -q "^Version:" || echo "$1"' _ {} \; || true)
+        # Check for version headers in docs (supports both formats)
+        MISSING_HEADERS=$(find docs/ -name "*.md" -exec sh -c 'head -n3 "$1" | grep -q "Version:" || echo "$1"' _ {} \; || true)
         if [ -n "$MISSING_HEADERS" ]; then
           echo "❌ Documentation files missing version headers:"
           echo "$MISSING_HEADERS"
-          echo "Please add version headers like: Version: v0.6.1"
+          echo "Please add version headers like: <!-- Version: 0.6.4 --> or Version: v0.6.4"
           exit 1
         else
           echo "✅ All documentation files have version headers"
