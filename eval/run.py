@@ -4,7 +4,7 @@
 import json
 import os
 import sys
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -32,15 +32,23 @@ def create_sample_dataset() -> list[dict]:
     return [
         {
             "query": "What is the main purpose of this project?",
-            "expected_answer": "AI-Enhanced Dev Lab for research and development",
-            "context": "This is a research and development lab focused on AI-assisted development tools.",
-            "category": "general",
+            "documents": [
+                "This is a research and development lab focused on AI-assisted development tools.",
+                "The lab provides tools for AI development and evaluation.",
+            ],
+            "relevant_docs": [
+                "This is a research and development lab focused on AI-assisted development tools.",
+            ],
+            "k": 5,
         },
         {
             "query": "How does the RAG system work?",
-            "expected_answer": "Retrieval-Augmented Generation system",
-            "context": "RAG combines retrieval with generation for better answers.",
-            "category": "technical",
+            "documents": [
+                "RAG combines retrieval with generation for better answers.",
+                "Retrieval-Augmented Generation uses document retrieval.",
+            ],
+            "relevant_docs": ["RAG combines retrieval with generation for better answers."],
+            "k": 5,
         },
     ]
 
@@ -60,7 +68,7 @@ def run_rag_evaluation(dataset_path: str = "eval/data/lab/lab_dev.jsonl") -> dic
 
     # Calculate additional metrics
     results = {
-        "timestamp": datetime.now(tz=datetime.timezone.utc).isoformat(),
+        "timestamp": datetime.now(tz=UTC).isoformat(),
         "dataset_size": len(test_cases),
         "retrieval": {
             "recall_at_5": metrics.recall_at_k.get(5, 0.0),

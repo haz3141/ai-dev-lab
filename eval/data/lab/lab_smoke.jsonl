@@ -1,2 +1,2 @@
-{"query": "What is this project?", "expected_answer": "AI-Enhanced Dev Lab", "context": "This is the AI-Enhanced Dev Lab project.", "category": "general"}
-{"query": "How to test?", "expected_answer": "Run evaluation", "context": "Run evaluation to test the system.", "category": "usage"}
+{"query": "What is this project?", "documents": ["This is the AI-Enhanced Dev Lab project.", "A development lab for AI tools.", "Research and development environment."], "relevant_docs": ["This is the AI-Enhanced Dev Lab project."], "k": 5}
+{"query": "How to test?", "documents": ["Run evaluation to test the system.", "Use pytest for unit tests.", "Evaluation framework provides testing capabilities."], "relevant_docs": ["Run evaluation to test the system."], "k": 5}
