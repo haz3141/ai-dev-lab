@@ -1,7 +1,7 @@
-<!-- Version: 0.6.0 -->
-# AI Dev Lab v0.6.0
+<!-- Version: 0.6.4 -->
+# AI-Enhanced Dev Lab v0.6.4
 
-AI Development Lab with MCP Server for secure, auditable AI tool interactions.
+AI Development Lab with MCP Server for secure, auditable AI tool interactions and RAG evaluation gates.
 
 ## Quick Start
 
@@ -12,7 +12,7 @@ AI Development Lab with MCP Server for secure, auditable AI tool interactions.
 
 2. Start the MCP server:
    ```bash
-   uvicorn mcp_server.server:app --reload
+   .venv/bin/python -m mcp_server.simple_server
    ```
 
 3. Run tests:
@@ -20,12 +20,33 @@ AI Development Lab with MCP Server for secure, auditable AI tool interactions.
    pytest
    ```
 
+## RAG Evaluation Gates
+
+Run evaluation locally:
+```bash
+# Run full evaluation
+python eval/run.py --dataset eval/data/lab/lab_dev.jsonl --output eval/runs/$(date +%Y%m%d-%H%M%S)
+
+# Check gates
+python scripts/ci/parse_metrics.py eval/runs/*/metrics.json
+
+# Start MCP server
+.venv/bin/python -m mcp_server.simple_server
+```
+
 ## Architecture
 
 - **MCP Server**: FastAPI-based server providing AI tools via MCP protocol
 - **Security**: Guardian-based access control and PII redaction
 - **Audit**: Comprehensive logging of all tool interactions
 - **Evaluation**: Automated testing and metrics for AI models
+- **RAG Gates**: Comprehensive evaluation framework with automated CI integration
+
+## Project Structure
+- `lab/` - Research and development experiments
+- `eval/` - Evaluation framework and gates
+- `mcp_server/` - MCP server implementation
+- `evidence/` - Evaluation evidence and reports
 
 ## Development
 

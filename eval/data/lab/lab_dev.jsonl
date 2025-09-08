@@ -1,0 +1,5 @@
+{"query": "What is the main purpose of this project?", "expected_answer": "AI-Enhanced Dev Lab for research and development", "context": "This is a research and development lab focused on AI-assisted development tools.", "category": "general"}
+{"query": "How does the RAG system work?", "expected_answer": "Retrieval-Augmented Generation system", "context": "RAG combines retrieval with generation for better answers.", "category": "technical"}
+{"query": "What are the key components?", "expected_answer": "RAG pipeline, MCP server, evaluation framework", "context": "The system includes RAG pipeline, MCP server, and evaluation framework.", "category": "technical"}
+{"query": "How to run evaluation?", "expected_answer": "Use eval/run.py script", "context": "Run evaluation using the eval/run.py script with appropriate dataset.", "category": "usage"}
+{"query": "What is MCP server?", "expected_answer": "Model Context Protocol server", "context": "MCP server provides tools for AI assistants through Model Context Protocol.", "category": "technical"}

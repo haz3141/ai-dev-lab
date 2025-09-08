@@ -1,22 +1,12 @@
 {
-  "$schema": "https://cursor.sh/schemas/settings.json",
   "models": {
+    "default": "grok-code-fast-1",
     "chat": "grok-code-fast-1",
-    "composer": "grok-code-fast-1",
-    "inlineEdit": "grok-code-fast-1"
-  },
-  "modelOptions": {
-    "temperature": 0.1,
-    "maxTokens": 4096,
-    "topP": 1.0
+    "edit": "grok-code-fast-1"
   },
   "agent": {
-    "autoRunTools": false,
+    "temperature": 0.1,
     "askBeforeWrite": true,
-    "respectProjectRules": true
-  },
-  "editor": {
-    "diffOnApply": true,
-    "confirmLargePatches": true
+    "diffOnApply": true
   }
 }

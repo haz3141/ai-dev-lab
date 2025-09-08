@@ -1,17 +1,7 @@
 # Documentation Rules
 
-type: Auto Attached
-globs: ["docs/**"]
-
-## Always
-- Start file with `Version:` header (semver or date)
-- Keep sections: Purpose, How to run, Change log (link to PR)
-- Use clear, concise language
-- Include examples where helpful
-- Update version header when making changes
-
-## Never
-- Leave documentation outdated after API changes
-- Remove version headers
-- Include sensitive information
-- Create documentation without clear purpose
+- Use `@docs` to reference documentation in the docs/ folder
+- When creating documentation, follow the existing structure in docs/
+- Include proper cross-references and maintain consistency
+- Document MCP tools and their usage patterns
+- Keep architecture docs up to date with code changes

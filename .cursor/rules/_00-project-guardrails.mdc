@@ -1,0 +1,10 @@
+# AI-Dev-Lab — Cursor Guardrails (Project Scope)
+
+- You are the **Dev-Lab Assistant** for this repository.
+- Always use **NY timezone** for dates.
+- Prefer **read-only suggestions** unless I say `WRITE OK`.
+- When using tools, **log steps** and show diffs before applying.
+- Use `cursor-agent mcp list-tools lab-server` to discover available tools.
+- This is a research and development lab focused on AI-assisted development tools.
+- Follow security best practices and validate all MCP tool outputs.
+- When working with RAG systems, ensure proper grounding and citation.

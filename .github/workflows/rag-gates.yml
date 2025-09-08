@@ -1,0 +1,75 @@
+name: RAG Evaluation Gates
+
+on:
+  pull_request:
+    paths:
+      - 'lab/**'
+      - 'eval/**'
+      - 'mcp_server/**'
+      - '.github/workflows/rag-gates.yml'
+  workflow_dispatch:
+
+jobs:
+  rag-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install numpy scikit-learn
+    
+    - name: Create evaluation directories
+      run: |
+        mkdir -p eval/data/lab
+        mkdir -p eval/runs
+        mkdir -p eval/configs
+    
+    - name: Run RAG evaluation
+      run: |
+        python eval/run.py --dataset eval/data/lab/lab_dev.jsonl --output eval/runs/ci-$(date +%Y%m%d-%H%M%S)
+      env:
+        PYTHONPATH: ${{ github.workspace }}
+    
+    - name: Parse metrics and check gates
+      run: |
+        python scripts/ci/parse_metrics.py eval/runs/*/metrics.json
+      continue-on-error: false
+    
+    - name: Upload evaluation artifacts
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: rag-eval-results
+        path: eval/runs/
+        retention-days: 30
+    
+    - name: Create evidence directory
+      run: |
+        mkdir -p evidence/learning/$(date +%Y-%m-%d)/v0.6.4/ci-$(date +%Y%m%d-%H%M%S)
+    
+    - name: Copy evidence
+      if: always()
+      run: |
+        RUN_ID="ci-$(date +%Y%m%d-%H%M%S)"
+        EVIDENCE_DIR="evidence/learning/$(date +%Y-%m-%d)/v0.6.4/$RUN_ID"
+        mkdir -p "$EVIDENCE_DIR"
+        cp -r eval/runs/* "$EVIDENCE_DIR/" || true
+        echo "Evidence saved to $EVIDENCE_DIR"

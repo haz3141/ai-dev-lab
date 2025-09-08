@@ -1,0 +1,2 @@
+{"query": "What is this project?", "expected_answer": "AI-Enhanced Dev Lab", "context": "This is the AI-Enhanced Dev Lab project.", "category": "general"}
+{"query": "How to test?", "expected_answer": "Run evaluation", "context": "Run evaluation to test the system.", "category": "usage"}

@@ -1,7 +1,11 @@
 {
-  "$schema": "https://cursor.sh/schemas/environment.json",
   "commands": {
-    "pytest_quiet": { "run": "pytest -q", "confirm": true },
-    "ruff_fix": { "run": "ruff check --fix .", "confirm": true }
+    "pytest": "python -m pytest",
+    "ruff": "python -m ruff",
+    "mcp-list": "cursor-agent mcp list",
+    "mcp-tools": "cursor-agent mcp list-tools lab-server",
+    "eval": "python eval/run.py --dataset eval/data/lab/lab_dev.jsonl --output eval/runs/$(date +%Y%m%d-%H%M%S)",
+    "test": "python -m pytest tests/",
+    "mcp": ".venv/bin/python -m mcp_server.simple_server"
   }
 }
