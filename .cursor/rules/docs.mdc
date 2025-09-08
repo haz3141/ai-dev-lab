@@ -1,7 +1,0 @@
-# Documentation Rules
-
-- Use `@docs` to reference documentation in the docs/ folder
-- When creating documentation, follow the existing structure in docs/
-- Include proper cross-references and maintain consistency
-- Document MCP tools and their usage patterns
-- Keep architecture docs up to date with code changes

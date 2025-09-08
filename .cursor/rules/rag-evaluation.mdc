@@ -1,0 +1,215 @@
+---
+description: RAG system evaluation and performance guidelines
+globs: ["eval/**/*", "lab/rag/**/*"]
+alwaysApply: false
+---
+
+# RAG Evaluation Rules - AI-Dev-Lab v0.6.4
+
+## Chunking Configuration
+
+### Standard Chunking Parameters
+- **Chunk Size**: 1000 tokens maximum
+- **Overlap**: 15% overlap between chunks
+- **Split Strategy**: Sentence-aware splitting
+- **Encoding**: UTF-8 with proper tokenization
+
+### Chunking Implementation
+```python
+# lab/rag/config.yaml
+chunking:
+  size: 1000
+  overlap: 0.15
+  strategy: "sentence"
+  encoding: "utf-8"
+```
+
+### Quality Validation
+- **Completeness**: Chunks contain complete thoughts
+- **Coherence**: Related information stays together
+- **Size Distribution**: Consistent chunk sizes
+- **Boundary Detection**: Proper sentence boundaries
+
+## Retrieval Metrics
+
+### Primary Metrics
+- **Recall@5**: Percentage of relevant documents in top 5 results
+- **Recall@10**: Percentage of relevant documents in top 10 results
+- **MRR@10**: Mean Reciprocal Rank for top 10 results
+- **Precision@5**: Precision for top 5 retrieved documents
+
+### Evaluation Thresholds
+```yaml
+# eval/configs/lab.yaml
+metrics:
+  recall@5:
+    target: 0.85
+    minimum: 0.75
+  recall@10:
+    target: 0.90
+    minimum: 0.80
+  mrr@10:
+    target: 0.75
+    minimum: 0.65
+```
+
+## Grounding Requirements
+
+### Citation Standards
+- **Source Attribution**: Every claim must cite source documents
+- **Confidence Scores**: Retrieval confidence must be reported
+- **Relevance Justification**: Explain why retrieved documents are relevant
+- **Multiple Sources**: Cross-reference multiple sources when possible
+
+### Grounding Implementation
+```python
+# Response format with grounding
+{
+  "answer": "Generated response with citations",
+  "citations": [
+    {
+      "document_id": "doc123",
+      "chunk_id": "chunk456",
+      "relevance_score": 0.92,
+      "text_snippet": "Relevant text from source"
+    }
+  ],
+  "confidence": 0.88
+}
+```
+
+## Performance Baselines
+
+### Retrieval Performance
+- **Latency**: < 200ms for retrieval operations
+- **Throughput**: > 100 queries per second
+- **Accuracy**: > 85% relevant documents in top 5
+- **Scalability**: Linear performance with data size
+
+### Generation Quality
+- **Faithfulness**: > 90% of generated content grounded in sources
+- **Relevance**: > 85% of responses address query requirements
+- **Coherence**: > 80% of responses maintain logical flow
+- **Completeness**: > 75% of responses provide comprehensive answers
+
+## Deterministic Testing
+
+### Fixed Seeds
+```python
+# lab/rag/eval.py
+import random
+import numpy as np
+
+# Fixed seeds for reproducible results
+random.seed(42)
+np.random.seed(42)
+torch.manual_seed(42)
+```
+
+### Test Dataset Structure
+```jsonl
+// eval/data/lab/lab_dev.jsonl
+{
+  "query": "What is the main purpose of AI-Dev-Lab?",
+  "expected_answer": "AI-Dev-Lab is a platform for developing and evaluating AI-enhanced development tools",
+  "relevant_docs": ["doc1", "doc2", "doc3"],
+  "difficulty": "easy"
+}
+```
+
+## Evaluation Pipeline
+
+### Pipeline Stages
+1. **Data Preparation**: Clean and format evaluation datasets
+2. **Retrieval Testing**: Test retrieval performance with metrics
+3. **Generation Testing**: Evaluate answer quality and grounding
+4. **Integration Testing**: End-to-end pipeline validation
+5. **Performance Benchmarking**: Compare against baselines
+
+### Automated Evaluation
+```python
+# eval/pipeline/run_eval.py
+def run_evaluation():
+    # Load test data
+    # Execute retrieval
+    # Generate answers
+    # Calculate metrics
+    # Generate report
+    pass
+```
+
+## Quality Gates
+
+### Pre-deployment Checks
+- ✅ Retrieval metrics meet minimum thresholds
+- ✅ Grounding citations are accurate
+- ✅ Deterministic tests pass consistently
+- ✅ Performance baselines achieved
+- ✅ Error handling tested
+
+### Continuous Monitoring
+- **Daily**: Automated metric collection
+- **Weekly**: Trend analysis and alerting
+- **Monthly**: Comprehensive evaluation rerun
+- **Quarterly**: Baseline updates and recalibration
+
+## Experimentation Framework
+
+### A/B Testing Setup
+- **Control Group**: Current production configuration
+- **Test Group**: New chunking or retrieval parameters
+- **Metrics Comparison**: Statistical significance testing
+- **Gradual Rollout**: Phased deployment with monitoring
+
+### Parameter Optimization
+```yaml
+# lab/rag/config.yaml - Parameter search space
+optimization:
+  chunk_size: [500, 750, 1000, 1250]
+  overlap: [0.1, 0.15, 0.2]
+  top_k: [3, 5, 7, 10]
+  similarity_threshold: [0.7, 0.8, 0.9]
+```
+
+## Debugging and Troubleshooting
+
+### Common Issues
+- **Low Recall**: Check chunking quality and overlap settings
+- **Poor Grounding**: Validate retrieval relevance scoring
+- **Inconsistent Results**: Ensure deterministic seeds are used
+- **Performance Degradation**: Monitor index size and query patterns
+
+### Diagnostic Tools
+- **Retrieval Analysis**: Examine retrieved documents for relevance
+- **Citation Verification**: Cross-check citations against source documents
+- **Latency Profiling**: Identify bottlenecks in retrieval pipeline
+- **Accuracy Auditing**: Manual review of generated responses
+
+## Documentation Requirements
+
+### Evaluation Reports
+```markdown
+# RAG Evaluation Report - v0.6.4
+
+## Configuration
+- Chunk size: 1000 tokens
+- Overlap: 15%
+- Retrieval method: semantic search
+
+## Metrics Results
+| Metric | Value | Target | Status |
+|--------|-------|--------|--------|
+| Recall@5 | 0.87 | 0.85 | ✅ PASS |
+| MRR@10 | 0.76 | 0.75 | ✅ PASS |
+
+## Analysis
+- Strengths: Good retrieval accuracy
+- Areas for improvement: Generation coherence
+- Recommendations: Increase training data diversity
+```
+
+### Configuration Tracking
+- **Version Control**: All configuration changes tracked
+- **Performance History**: Metrics tracked over time
+- **Change Impact**: Analysis of configuration changes
+- **Rollback Points**: Known good configurations documented

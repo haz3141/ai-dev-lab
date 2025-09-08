@@ -1,6 +1,0 @@
-# Freeze Guardrails
-
-- Respect the FREEZE.md file when making changes
-- Check for freeze periods before major modifications
-- Follow the freeze guidelines for production deployments
-- Coordinate with team during freeze periods

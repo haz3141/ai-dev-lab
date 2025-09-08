@@ -1,7 +1,50 @@
-# Project Guardrails
+---
+description: Core project guidelines and security requirements
+alwaysApply: true
+---
 
-- Always validate MCP tool outputs before using them
-- Follow the security compliance checklist in docs/rules-guidelines/
-- Use the MCP allowlist configuration for tool access control
-- Maintain audit trails for security-sensitive operations
-- Test MCP integrations thoroughly before deployment
+# Project Guardrails - AI-Dev-Lab v0.6.4
+
+## Project Overview
+- **Project**: AI-Enhanced Dev Lab v0.6.4
+- **Focus**: MCP servers and RAG evaluation gates
+- **Architecture**: Lab-to-app promotion workflow with security gates
+
+## Core Guidelines
+
+### Security Compliance
+- All changes must pass security validation through Guardian
+- PII redaction required for any sensitive data handling
+- Audit logging mandatory for security-related operations
+- Freeze guard compliance for production deployments
+
+### Code Standards
+- **Black formatting** as single source of truth
+- **Conventional commits** for all changes (enforced by commitlint)
+- **Code freeze policy**: 300 line limit for critical changes
+- **Test coverage**: Minimum 68% threshold required
+
+### Documentation Requirements
+- **Version headers** required: `<!-- Version: 0.6.4 -->`
+- **Cross-references** must be maintained and updated
+- **Architecture diagrams** must reflect current state
+- **Release notes** required for all deployments
+
+### Development Workflow
+- **Lab → App promotion** requires evaluation gates
+- **Experimental features** must be documented with results
+- **MCP server changes** require allowlist validation
+- **RAG evaluation** must meet performance baselines
+
+## Quality Gates
+- ✅ Security audit passes
+- ✅ Test coverage ≥ 68%
+- ✅ Documentation updated
+- ✅ Conventional commit format
+- ✅ Black formatting applied
+
+## Risk Mitigation
+- Never commit untested experimental code to main
+- Always validate MCP tool changes against allowlist
+- Maintain audit trails for security decisions
+- Freeze guard prevents unauthorized production changes
