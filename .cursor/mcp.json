@@ -3,6 +3,13 @@
     "lab-server": {
       "command": ".venv/bin/python",
       "args": ["-m", "mcp_server.simple_server"],
+      "transport": "stdio",
+      "env": {}
+    },
+    "mcp-promotions": {
+      "command": ".venv/bin/python",
+      "args": ["-m", "mcp_server.promotions_server"],
+      "transport": "stdio",
       "env": {}
     }
   }
