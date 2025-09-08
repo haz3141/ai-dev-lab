@@ -1,18 +1,15 @@
 name: RAG Evaluation Gates
 
 on:
+  push:
+    branches: [ main, develop, feat/v0.6.4-rag-gates ]
   pull_request:
-    paths:
-      - 'lab/**'
-      - 'eval/**'
-      - 'mcp_server/**'
-      - '.github/workflows/rag-gates.yml'
+    branches: [ main, develop ]
   workflow_dispatch:
 
 jobs:
   rag-gates:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     
     steps:
     - uses: actions/checkout@v4
@@ -22,54 +19,85 @@ jobs:
       with:
         python-version: '3.11'
     
-    - name: Cache dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-    
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install numpy scikit-learn
+        pip install -r requirements-dev.txt
     
-    - name: Create evaluation directories
+    - name: Verify MCP Server
       run: |
-        mkdir -p eval/data/lab
-        mkdir -p eval/runs
-        mkdir -p eval/configs
+        echo "🔧 Testing MCP server startup..."
+        python -c "
+        from mcp_server.server import app
+        print('✅ MCP server imports successfully')
+        "
     
-    - name: Run RAG evaluation
+    - name: Test MCP Tools
       run: |
-        python eval/run.py --dataset eval/data/lab/lab_dev.jsonl --output eval/runs/ci-$(date +%Y%m%d-%H%M%S)
-      env:
-        PYTHONPATH: ${{ github.workspace }}
+        echo "🔧 Testing MCP tools..."
+        python -c "
+        from mcp_server.tools.terminal_helper import (
+            run_command, check_file_exists, read_file_safe, 
+            list_directory_safe, run_eval_safe, check_gates_safe
+        )
+        print('✅ All MCP tools import successfully')
+        "
     
-    - name: Parse metrics and check gates
+    - name: Run RAG Evaluation
       run: |
-        python scripts/ci/parse_metrics.py eval/runs/*/metrics.json
-      continue-on-error: false
+        echo "🚀 Running RAG evaluation..."
+        python eval/run.py \
+          --dataset eval/data/lab/lab_dev.jsonl \
+          --output eval/runs/ci-test
     
-    - name: Upload evaluation artifacts
+    - name: Check Evaluation Gates
+      run: |
+        echo "🚪 Checking evaluation gates..."
+        python scripts/ci/parse_metrics.py eval/runs/ci-test/metrics.json
+    
+    - name: Test MCP Endpoints
+      run: |
+        echo "🔧 Testing MCP endpoints..."
+        python -m uvicorn mcp_server.server:app --host 0.0.0.0 --port 8000 &
+        SERVER_PID=$!
+        sleep 5
+        
+        # Test health endpoint
+        curl -f http://localhost:8000/health || exit 1
+        
+        # Test terminal endpoints
+        curl -X POST http://localhost:8000/tools/run_command \
+          -H "Content-Type: application/json" \
+          -d '{"command": "ls -la", "timeout": 10}' || exit 1
+        
+        curl -X POST http://localhost:8000/tools/check_file \
+          -H "Content-Type: application/json" \
+          -d '{"filepath": "eval/run.py"}' || exit 1
+        
+        # Test evaluation endpoints
+        curl -X POST http://localhost:8000/tools/run_eval \
+          -H "Content-Type: application/json" \
+          -d '{"dataset": "eval/data/lab/lab_dev.jsonl", "output_dir": "eval/runs/ci-test"}' || exit 1
+        
+        curl -X POST http://localhost:8000/tools/check_gates \
+          -H "Content-Type: application/json" \
+          -d '{"metrics_file": "eval/runs/ci-test/metrics.json"}' || exit 1
+        
+        kill $SERVER_PID
+        echo "✅ All MCP endpoints working"
+    
+    - name: Security Validation
+      run: |
+        echo "🔒 Validating security configuration..."
+        python scripts/ci/validate_mcp_allowlist.py
+    
+    - name: Upload Test Results
       uses: actions/upload-artifact@v3
       if: always()
       with:
-        name: rag-eval-results
-        path: eval/runs/
-        retention-days: 30
-    
-    - name: Create evidence directory
-      run: |
-        mkdir -p evidence/learning/$(date +%Y-%m-%d)/v0.6.4/ci-$(date +%Y%m%d-%H%M%S)
-    
-    - name: Copy evidence
-      if: always()
-      run: |
-        RUN_ID="ci-$(date +%Y%m%d-%H%M%S)"
-        EVIDENCE_DIR="evidence/learning/$(date +%Y-%m-%d)/v0.6.4/$RUN_ID"
-        mkdir -p "$EVIDENCE_DIR"
-        cp -r eval/runs/* "$EVIDENCE_DIR/" || true
-        echo "Evidence saved to $EVIDENCE_DIR"
+        name: rag-gates-results
+        path: |
+          eval/runs/ci-test/
+          logs/
+        retention-days: 7

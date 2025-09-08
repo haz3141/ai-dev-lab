@@ -1,4 +1,12 @@
-version: v0.6.2
+version: v0.6.4
 allow:
   - docs.search
   - vector.search
+  - tools.search_docs
+  - tools.summarize
+  - tools.run_command
+  - tools.check_file
+  - tools.read_file
+  - tools.list_directory
+  - tools.run_eval
+  - tools.check_gates

@@ -34,6 +34,38 @@ python scripts/ci/parse_metrics.py eval/runs/*/metrics.json
 .venv/bin/python -m mcp_server.simple_server
 ```
 
+### MCP Tools Available
+
+The MCP server provides the following tools:
+
+#### Terminal Operations
+- **`run_command`**: Execute terminal commands safely with timeout
+- **`check_file`**: Check if files exist and get metadata
+- **`read_file`**: Safely read files with line limits
+- **`list_directory`**: List directory contents with limits
+
+#### Evaluation Operations
+- **`run_eval`**: Run RAG evaluation safely
+- **`check_gates`**: Check if evaluation gates pass
+
+#### Usage Examples
+```bash
+# Test MCP server
+curl -X POST http://localhost:8000/tools/run_command \
+  -H "Content-Type: application/json" \
+  -d '{"command": "ls -la", "timeout": 10}'
+
+# Check file existence
+curl -X POST http://localhost:8000/tools/check_file \
+  -H "Content-Type: application/json" \
+  -d '{"filepath": "eval/run.py"}'
+
+# Run evaluation
+curl -X POST http://localhost:8000/tools/run_eval \
+  -H "Content-Type: application/json" \
+  -d '{"dataset": "eval/data/lab/lab_dev.jsonl", "output_dir": "eval/runs/test"}'
+```
+
 ## Architecture
 
 - **MCP Server**: FastAPI-based server providing AI tools via MCP protocol
